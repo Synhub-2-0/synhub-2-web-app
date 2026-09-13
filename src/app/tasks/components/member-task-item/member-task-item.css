@@ -1,0 +1,73 @@
+.card{
+  background:#f4f5f7;
+  border:1px solid #e6e7ea;
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  display:flex; flex-direction:column; gap:12px;
+}
+
+.card__head h3{ margin:0; font-size:1.2rem; font-weight:700; color:#1f2937; }
+.divider{ height:2px; background:#e2e3e7; border-radius:2px; }
+
+.desc{
+  background:#fff; border:1px solid #e8e8e8; border-radius:14px;
+  padding:12px 14px; min-height:90px; box-shadow:0 2px 6px rgba(0,0,0,.04);
+  color:#111827;
+}
+
+.meta{ display:grid; justify-items:center; }
+.muted{ color:#6b7280; font-size:.9rem; }
+
+.progress{
+  width:100%; height:10px; background:#e9ecef;
+  border-radius:999px; overflow:hidden;
+}
+.progress .bar{ width:100%; height:100%; }
+
+.progress .bar.ok{      background:#22c55e; }
+.progress .bar.warn{    background:#f59e0b; }
+.progress .bar.late{    background:#ef4444; }
+.progress .bar.unknown{ background:#e5e7eb; }
+.progress .bar.hold{    background:#f59e0b; }
+.progress .bar.done{    background:#3b82f6; }
+
+.actions{
+  display:grid; grid-template-columns:1fr; gap:14px; margin-top:8px;
+}
+.btn{
+  appearance:none; border:none; border-radius:999px; padding:12px 18px;
+  color:#fff; font-weight:700; cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.12);
+  transition:transform .05s ease, box-shadow .15s ease;
+}
+.btn:hover{ transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,.16); }
+
+.btn-comment{ background:#f59e0b; }
+.btn-done{ background:#22c55e; }
+.card--clickable { cursor: pointer; }
+.card--clickable:hover { box-shadow: 0 6px 16px rgba(0,0,0,.10); }
+
+.badge{
+  padding:6px 10px; border-radius:999px;
+  background:#f3f4f6; color:#374151; font-size:.85rem; font-weight:600;
+}
+
+.card__head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap:12px;
+}
+
+.card__title{
+  margin:0;
+  font-size:1.2rem;
+  font-weight:700;
+  color:#1f2937;
+  flex:1;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}

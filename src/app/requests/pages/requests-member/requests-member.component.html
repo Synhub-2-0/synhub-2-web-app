@@ -1,0 +1,20 @@
+<div>
+  <div>
+    <p style="font-size: 24px; font-weight: bold;">Solicitudes</p>
+  </div>
+  <div style="height: 16px;"></div>
+  <section class="toolbar">
+    <label>
+      Estado:
+      <select [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)">
+        <option *ngFor="let s of statusOptions" [ngValue]="s">
+          {{ s === 'ALL' ? 'todas' : (s === 'PENDING' ? 'pendientes' : 'aprobadas') }}
+        </option>
+      </select>
+    </label>
+  </section>
+  <div style="height: 16px;"></div>
+  <div>
+    <app-request-card-list [requests]="filtered()"></app-request-card-list>
+  </div>
+</div>

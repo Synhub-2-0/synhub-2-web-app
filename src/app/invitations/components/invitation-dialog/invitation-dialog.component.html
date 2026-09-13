@@ -1,0 +1,9 @@
+<div class="confirmation-dialog">
+  <div class="text">
+    <p>Estas por aceptar a: {{invitation.member.name}} {{invitation.member.surname}} al grupo, ¿Estás seguro que deseas aceptar la invitación?.</p>
+  </div>
+  <div class="button-container">
+    <button (click)="onAcceptRequest()" style="color: #4CAF50;">Aceptar</button>
+    <button (click)="onNoClick()" style="color: #d32f2f">Cancelar</button>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<article class="card card--clickable" (click)="open()">
+  <header class="card__head">
+    <h3>{{ task.title }}</h3>
+    <span class="badge">{{ task.status }}</span>
+  </header>
+
+  <div class="divider"></div>
+
+  <p class="desc">{{ task.description || 'Sin descripción' }}</p>
+
+  <div class="meta">
+    <span class="muted" *ngIf="task.dueDate">Fecha de entrega: {{ task.dueDate | date:'dd/MM/yyyy' }}</span>
+  </div>
+
+  <div class="progress">
+    <div class="bar" [ngClass]="progressClass"></div>
+  </div>
+
+  <div class="meta">
+    <span class="muted">Tiempo restante: {{ remainingLabel }}</span>
+  </div>
+  @if (task.status === 'IN_PROGRESS') {
+    <footer class="actions">
+      <button type="button" class="btn btn-comment" (click)="$event.stopPropagation(); goComment()">
+        Enviar un comentario
+      </button>
+      <button type="button" class="btn btn-done" (click)="$event.stopPropagation(); markDone()">
+        Marcar como completada
+      </button>
+    </footer>
+  }
+</article>

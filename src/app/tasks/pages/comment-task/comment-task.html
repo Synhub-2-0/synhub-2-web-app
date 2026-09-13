@@ -1,0 +1,37 @@
+<section class="card">
+  <header class="card__head">
+    <h3 class="card__title">{{ task?.title || 'Tarea' }}</h3>
+    <span class="badge">{{ task?.status || '—' }}</span>
+  </header>
+
+  <div class="divider"></div>
+
+  <div *ngIf="loading" class="loading">Cargando…</div>
+
+  <ng-container *ngIf="!loading">
+    <p class="desc">{{ task?.description || 'Sin descripción' }}</p>
+
+    <div class="meta">
+      <span class="muted">Fecha de entrega: {{ dueLabel }}</span>
+    </div>
+
+    <div class="progress">
+      <div class="bar" [ngClass]="progressClass"></div>
+    </div>
+
+    <div class="meta">
+      <span class="muted">Tiempo restante: {{ remainingLabel }}</span>
+    </div>
+
+    <div class="comment">
+      <textarea rows="5" placeholder="Comentario:" [(ngModel)]="comment"></textarea>
+    </div>
+
+    <footer class="actions">
+      <button type="button" class="btn btn-comment" [disabled]="!comment.trim() || saving" (click)="submit()">
+        Enviar comentario
+      </button>
+      <button type="button" class="btn btn-cancel" (click)="cancel()">Cancelar</button>
+    </footer>
+  </ng-container>
+</section>

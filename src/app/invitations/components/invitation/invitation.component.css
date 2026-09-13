@@ -1,0 +1,58 @@
+.invitation-card{
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px 0;
+  gap: 16px;
+  background-color: #f3f3f3;
+  .invitation-name-display{
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #1A4E85;
+    color: white;
+
+    .member-pfp {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .buttons-containers{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+
+    .accept-button{
+      color: white;
+      font-size: 16px;
+      background-color: #4CAF50;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    .reject-button{
+      color: white;
+      font-size: 16px;
+      background-color: #f44336;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+  }
+}

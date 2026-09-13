@@ -1,0 +1,26 @@
+<div class="card" (click)="redirect()">
+  <div class="card-column">
+    <div class="card-row">
+      <div class="avatar-box">
+        <img class="avatar-img" src="{{request.task.member?.urlImage}}" alt="avatar" />
+      </div>
+      <div class="member-name">
+        {{request.task.member?.name}} {{request.task.member?.surname}}
+      </div>
+    </div>
+    <div class="card-row">
+      <div class="inner-card">
+        <div class="inner-card-content">
+          <div class="task-title">{{request.task.title}}</div>
+          <div class="divider"></div>
+          <div class="comment">Comentario: {{request.description}}</div>
+        </div>
+      </div>
+      <div class="icon-box" [ngStyle]="{'background': setTypeColor(request.requestType)}">
+        <span class="material-icons icon">
+          {{ getRequestTypeIcon(request.requestType) }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

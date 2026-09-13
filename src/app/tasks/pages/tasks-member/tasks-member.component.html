@@ -1,0 +1,24 @@
+<section class="toolbar" *ngIf="totalCount() > 0">
+  <label>
+    Estado:
+    <select [(ngModel)]="filter">
+      <option *ngFor="let s of statusOptions" [ngValue]="s">{{ labelFor(s) }}</option>
+    </select>
+  </label>
+</section>
+
+<ng-container *ngIf="totalCount() === 0; else tasksTpl">
+  <div class="empty-page">
+    <div class="empty-card">No tienes tareas asignadas</div>
+  </div>
+</ng-container>
+
+<ng-template #tasksTpl>
+  <section class="list">
+    <member-task-item
+      *ngFor="let t of filtered()"
+      [task]="t"
+      (changed)="load()">
+    </member-task-item>
+  </section>
+</ng-template>

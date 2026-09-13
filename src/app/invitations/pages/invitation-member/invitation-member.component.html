@@ -1,0 +1,77 @@
+<div class="invitations-screen">
+  @if(activeInvitation){
+    <div class="invitation-active-container">
+      <div style="font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">
+        <p>¡Tienes una invitación activa para unirte al grupo <strong>"{{activeInvitation.group.name}}"</strong></p>
+      </div>
+      <div class="group-container-found">
+        <div class="group-found-header">
+          <img [src]="activeInvitation.group.imgUrl || 'assets/default-group-image.png'" alt="Grupo {{ activeInvitation.group.name }}" class="group-image">
+          <p>{{activeInvitation.group.name}}</p>
+        </div>
+        <div style="border-top: 2px solid #fff; width: 100%;"></div>
+        <div class="group-found-body">
+          <p>Descripción: {{
+              activeInvitation.group.description.length > 500
+                ? (activeInvitation.group.description.slice(0, 500) + '...')
+                : activeInvitation.group.description
+            }}</p>
+          <p>Cantidad de miembros: {{activeInvitation.group.memberCount}}</p>
+          <p>Código: {{activeInvitation.group.code}}</p>
+        </div>
+        <div class="group-found-button-container">
+          <button class="accept-button" (click)="onCheckInvitation()">Revisar estado de la solicitud</button>
+          <button class="decline-button" (click)="onCancelInvitation()">Cancelar solicitud</button>
+        </div>
+      </div>
+    </div>
+  }
+  @if (activeInvitation == null) {
+    <div class="search-container">
+      <div class="search-title">
+        <p>Únete a un grupo</p>
+      </div>
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-bar-form">
+        <mat-form-field appearance="fill" class="custom-form-field full-width">
+          <mat-label>Buscar grupo</mat-label>
+          <mat-icon matPrefix style="color: #888;">search</mat-icon>
+          <input matInput placeholder="Buscar grupo" type="text" formControlName="query">
+        </mat-form-field>
+        <button class="search-button" type="submit">Buscar Grupo</button>
+      </form>
+      @if (searchError) {
+        <div class="group-container-error">
+          <p>{{ searchError }}</p>
+        </div>
+      }
+    </div>
+    @if (!groupFound){
+      <div class="group-container-no-group">
+        <p>Busca un grupo por su código único, solicitalo al líder de grupo o a uno de los miembros del equipo.</p>
+      </div>
+    }
+    @if (groupFound){
+      <div class="group-container-found">
+        <div class="group-found-header">
+          <img [src]="groupFound.imgUrl || 'assets/default-group-image.png'" alt="Grupo {{ groupFound.name }}" class="group-image">
+          <p>{{groupFound.name}}</p>
+        </div>
+        <div style="border-top: 2px solid #fff; width: 100%;"></div>
+        <div class="group-found-body">
+          <p>Descripción: {{
+              groupFound.description.length > 500
+                ? (groupFound.description.slice(0, 500) + '...')
+                : groupFound.description
+            }}</p>
+          <p>Cantidad de miembros: {{groupFound.memberCount}}</p>
+          <p>Código: {{groupFound.code}}</p>
+        </div>
+        <div class="group-found-button-container">
+          <button class="join-button" (click)="onJoinGroup()">Solicitar unirse</button>
+        </div>
+      </div>
+    }
+  }
+
+</div>
+

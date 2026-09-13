@@ -1,0 +1,51 @@
+<article class="card card--clickable" (click)="open()">
+  <header class="card__head">
+    <div class="user">
+      <ng-container *ngIf="task.member?.urlImage; else initialsTpl">
+        <img class="avatar" [src]="task.member?.urlImage" alt="avatar" />
+      </ng-container>
+      <ng-template #initialsTpl>
+        <span class="avatar avatar--initials">{{ initials }}</span>
+      </ng-template>
+
+      <div class="user__info">
+        <div class="user__name">{{ task.member?.name }} {{ task.member?.surname }}</div>
+        <div class="title">{{ task.title }}</div>
+      </div>
+    </div>
+
+    <span class="badge">{{ task.status }}</span>
+  </header>
+
+  <div class="divider"></div>
+
+  <p class="desc" *ngIf="task.description; else noDesc">{{ task.description }}</p>
+  <ng-template #noDesc>
+    <p class="desc desc--empty">Sin descripción</p>
+  </ng-template>
+
+  <div class="meta">
+    <div class="progress">
+      <div class="bar" [ngClass]="progressClass"></div>
+    </div>
+    <small class="muted" *ngIf="task.dueDate">
+      Vence: {{ task.dueDate | date:'mediumDate':'UTC' }}
+    </small>
+  </div>
+
+  <footer class="actions actions--primary" *ngIf="canModify">
+    <button type="button" class="btn btn--warn" (click)="edit($event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="btn__icon">
+        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm14.71-9.04c.39-.39.39-1.02 0-1.41l-2.5-2.5a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.99-1.67z"/>
+      </svg>
+      Editar
+    </button>
+
+    <button type="button" class="btn btn--danger" (click)="confirmRemove($event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="btn__icon">
+        <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1z"/>
+      </svg>
+      Borrar
+    </button>
+  </footer>
+</article>

@@ -1,0 +1,43 @@
+<section class="create">
+  <h3>Crear tarea</h3>
+
+  <div class="grid">
+    <input placeholder="Título" [(ngModel)]="title" />
+    <textarea rows="2" placeholder="Descripción" [(ngModel)]="description"></textarea>
+
+    <mat-form-field appearance="outline" class="w-full assignee-field">
+      <mat-label>Asignar a</mat-label>
+
+      <mat-select [(ngModel)]="memberId">
+        <mat-select-trigger>
+          <span class="trigger no-pointer no-select">
+            <ng-container *ngIf="selectedMember; else noneTpl">
+              <img class="avatar" [src]="imgFor(selectedMember)" alt="avatar seleccionado" />
+              <span class="trigger-text">{{ memberLabel(selectedMember!) }}</span>
+            </ng-container>
+            <ng-template #noneTpl>
+              <span class="muted">Selecciona un miembro</span>
+            </ng-template>
+          </span>
+        </mat-select-trigger>
+
+        <mat-option *ngFor="let m of members" [value]="m.id">
+          <div class="opt">
+            <img class="avatar" [src]="imgFor(m)" alt="avatar miembro" />
+            <span class="opt-text">{{ memberLabel(m) }}</span>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="dt-field">
+      <label for="due">Vencimiento</label>
+      <input id="due" type="datetime-local" [(ngModel)]="dueDateTime" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" class="btn-save" (click)="save()">Guardar</button>
+    <button mat-flat-button color="warn" class="btn-cancel" (click)="cancel()">Cancelar</button>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+<div class="invitation-card">
+  <div class="invitation-name-display">
+    <img src="{{invitation.member.imgUrl}}" class="member-pfp">
+    <div class="name-container">
+      <p>{{invitation.member.name}} {{invitation.member.surname}}</p>
+      <p style="color: #b7b7b7">{{invitation.member.username}}</p>
+    </div>
+  </div>
+  <div class="buttons-containers">
+    <button class="accept-button" (click)="openDialog()">
+      <span class="material-icons" style="vertical-align: middle; margin-right: 10px;">check</span>
+      <p style="display: inline; margin: 0;">Aceptar</p>
+    </button>
+    <button class="reject-button" (click)="onRejectRequest()">
+      <span class="material-icons" style="vertical-align: middle; margin-right: 10px;">cancel</span>
+      <p style="display: inline; margin: 0;">Rechazar</p>
+    </button>
+  </div>
+</div>
+

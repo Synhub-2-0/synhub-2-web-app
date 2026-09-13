@@ -1,0 +1,122 @@
+<div class="register-screen">
+  <div class="register-container">
+    <div class="register-title">
+      <p>Registro</p>
+    </div>
+    <div class="register-form">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="register-form-row">
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Nombre</mat-label>
+            <mat-icon matPrefix style="color: #888;">abc</mat-icon>
+            <input matInput formControlName="name" placeholder="Nombre" type="text" required>
+            <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
+              El nombre es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Apellido</mat-label>
+            <mat-icon matPrefix style="color: #888;">abc</mat-icon>
+            <input matInput formControlName="surname" placeholder="Apellido" type="text" required>
+            <mat-error *ngIf="registerForm.get('surname')?.hasError('required')">
+              El apellido es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Usuario</mat-label>
+            <mat-icon matPrefix style="color: #888;">person</mat-icon>
+            <input matInput formControlName="username" placeholder="Usuario" type="text" required>
+            <mat-error *ngIf="registerForm.get('username')?.hasError('required')">
+              El nombre de usuario es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Correo Electrónico</mat-label>
+            <mat-icon matPrefix style="color: #888;">mail</mat-icon>
+            <input matInput formControlName="email" placeholder="Correo Electrónico" type="email" required>
+            <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+              El correo electrónico es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Url de foto de perfil</mat-label>
+            <mat-icon matPrefix style="color: #888;">link</mat-icon>
+            <input matInput formControlName="imgUrl" placeholder="Url de foto de perfil" type="text" required>
+            <mat-error *ngIf="registerForm.get('imgUrl')?.hasError('required')">
+              El enlace a la foto de perfil es <strong>requerido</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Contraseña</mat-label>
+            <mat-icon matPrefix style="color: #888;">lock</mat-icon>
+            <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña" required>
+            <button mat-icon-button matSuffix (click)="showPassword = !showPassword" type="button" tabindex="-1">
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+              La contraseña es <strong>requerida</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="fill" class="custom-form-field full-width">
+            <mat-label>Confirmar Contraseña</mat-label>
+            <mat-icon matPrefix style="color: #888;">lock</mat-icon>
+            <input matInput [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" placeholder="Confirmar Contraseña" required>
+            <button mat-icon-button matSuffix (click)="showConfirmPassword = !showConfirmPassword" type="button" tabindex="-1">
+              <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched">
+              <mat-icon style="vertical-align: middle; color: #d32f2f;">error</mat-icon>
+              Las contraseñas no coinciden
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="toggle-container">
+          <p style="font-weight: bold; font-size: 18px;">Rol</p>
+          <div>
+            <mat-button-toggle-group formControlName="role" appearance="legacy" class="role-toggle-group" name="role" aria-label="Rol">
+              <mat-button-toggle value="leader">Líder</mat-button-toggle>
+              <mat-button-toggle value="member">Miembro</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </div>
+        <div class="register-button-container">
+          <div style="margin-bottom: 16px; display: flex; flex-direction: column; align-items: center;">
+            <ngx-recaptcha2 #captchaElem
+              [siteKey]="siteKey"
+              (reset)="handleReset()"
+              (expire)="handleExpire()"
+              (load)="handleLoad()"
+              (success)="handleSuccess($event)"
+              formControlName="recaptcha">
+            </ngx-recaptcha2>
+            <div *ngIf="registerForm.get('recaptcha')?.invalid && registerForm.get('recaptcha')?.touched" style="color: #d32f2f; font-size: 12px; margin-top: 8px; text-align: center;">
+              Por favor, completa el reCAPTCHA.
+            </div>
+            <div class="register-button" style="margin-top: 16px;">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="registerForm.invalid"
+                [ngClass]="registerForm.valid ? 'register-button-valid' : 'register-button-invalid'"
+              >
+                Registrarse
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

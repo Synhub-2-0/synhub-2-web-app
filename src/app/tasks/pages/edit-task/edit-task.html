@@ -1,0 +1,64 @@
+<section class="edit">
+  <h3>Editar tarea</h3>
+
+  <div *ngIf="loading" class="loading">Cargando…</div>
+
+  <form *ngIf="!loading" class="grid" (ngSubmit)="save()">
+
+    <div class="field">
+      <label>Título</label>
+      <input [(ngModel)]="title" name="title" placeholder="Título" />
+    </div>
+
+    <div class="field">
+      <label>Descripción</label>
+      <textarea [(ngModel)]="description" name="description" rows="4" placeholder="Descripción"></textarea>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-full assignee-field">
+      <mat-label>Asignar a</mat-label>
+      <mat-select [(ngModel)]="memberId" name="memberId">
+        <mat-select-trigger>
+          <span class="trigger no-pointer no-select">
+            <ng-container *ngIf="selectedMember; else noneTpl">
+              <img class="avatar" [src]="imgFor(selectedMember)" alt="avatar seleccionado" />
+              <span class="trigger-text">{{ memberLabel(selectedMember!) }}</span>
+            </ng-container>
+            <ng-template #noneTpl>
+              <span class="muted">Sin asignar</span>
+            </ng-template>
+          </span>
+        </mat-select-trigger>
+
+        <mat-option [value]="undefined">Sin asignar</mat-option>
+        <mat-option *ngFor="let m of members" [value]="m.id">
+          <div class="opt">
+            <img class="avatar" [src]="imgFor(m)" alt="avatar miembro" />
+            <span class="opt-text">{{ memberLabel(m) }}</span>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="field">
+      <label for="due">Fecha de vencimiento</label>
+      <input id="due" type="datetime-local" [(ngModel)]="dueDateTime" name="dueDateTime" />
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-save" [disabled]="saving">
+        <svg viewBox="0 0 24 24" class="icon">
+          <path d="M17,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3M12,19A3.5,3.5 0 0,1 8.5,15.5A3.5,3.5 0 0,1 12,12A3.5,3.5 0 0,1 15.5,15.5A3.5,3.5 0 0,1 12,19M6,8V5H16V8H6Z"/>
+        </svg>
+        Guardar
+      </button>
+
+      <button type="button" class="btn btn-cancel" (click)="cancel()">
+        <svg viewBox="0 0 24 24" class="icon">
+          <path d="M12,2A10,10 0 1,0 22,12A10,10 0 0,0 12,2M15.59,7.58L12,11.17L8.41,7.58L7,9L10.59,12.59L7,16.17L8.41,17.58L12,14L15.59,17.58L17,16.17L13.41,12.59L17,9"/>
+        </svg>
+        Cancelar
+      </button>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,15 @@
+<div class="screen">
+  @if(requests.length === 0) {
+    <p class="no-requests-message">No tienes solicitudes pendientes.</p>
+  }
+  @if(requests.length > 0) {
+    <div class="requests-list">
+      @for (request of requests; track request.id) {
+        <app-request-card
+          [request]="request"
+          class="request-card"
+        ></app-request-card>
+      }
+    </div>
+  }
+</div>

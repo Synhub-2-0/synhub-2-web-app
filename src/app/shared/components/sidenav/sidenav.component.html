@@ -1,0 +1,56 @@
+<div class ="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
+  <div class = "logo-container">
+    <button class="logo" (click)="toggleCollapse()">S</button>
+    @if (collapsed) {
+      <div class="logo-text" @fadeInOut>{{ fullName }}</div>
+      <button class="btn-close" (click)="closeSidenav()">
+        <i class="fas fa-times close-icon"></i>
+      </button>
+    }
+  </div>
+  @if (collapsed) {
+    <div class="user-pfp" @fadeInOut>
+      <img [src]="pfpUrl" alt="User Profile Picture" class="pfp-image"/>
+    </div>
+  }
+  <ul class="sidenav-nav">
+    @for (data of navData; track data.title) {
+      <li class="sidenav-nav-item">
+        <a class="sidenav-nav-link" [routerLink]="[data.path]"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+        >
+          @if (data.svg) {
+            <span class="sidenav-link-icon" [innerHTML]="data.svg"></span>
+          }
+          @if (collapsed) {
+            <span class="sidenav-link-text" @fadeInOut>{{data.title}}</span>
+          }
+        </a>
+      </li>
+    }
+
+  </ul>
+  @if (collapsed) {
+    <div class="logout-section">
+      <ul class="sidenav-nav">
+        <li class="sidenav-nav-item">
+          <a class="sidenav-nav-link" [routerLink]="[LOGOUT_OPTION.path]"
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{exact: true}"
+          >
+            @if (LOGOUT_OPTION.svg) {
+              <span class="sidenav-link-icon" [innerHTML]="LOGOUT_OPTION.svg"></span>
+            }
+            <span class="sidenav-link-text" @fadeInOut>{{LOGOUT_OPTION.title}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  }
+</div>
+
+<!--
+<i class="sidenav-link-icon" [class]="data.icon"></i>
+<span class="sidenav-link-icon" *ngIf="data.svg" [innerHTML]="data.svg"></span>
+-->

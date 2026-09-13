@@ -1,0 +1,63 @@
+<div class="metrics-summary-card">
+  <div class="dashboard-summary-section" *ngIf="!loadingMetrics">
+    <div class="dashboard-header">
+      <span class="dashboard-title">Dashboard de métricas</span>
+      <span class="dashboard-subtitle">Resumen resumido de tu actividad</span>
+    </div>
+    <div class="dashboard-metrics-row">
+      <div class="dashboard-metric-card green">
+        <span class="material-icons dashboard-metric-icon">check_circle</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.completed ?? 0 }}</div>
+          <div class="dashboard-metric-label">Completadas</div>
+        </div>
+      </div>
+      <div class="dashboard-metric-card teal">
+        <span class="material-icons dashboard-metric-icon">done_all</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.done ?? 0 }}</div>
+          <div class="dashboard-metric-label">Terminadas</div>
+        </div>
+      </div>
+      <div class="dashboard-metric-card blue">
+        <span class="material-icons dashboard-metric-icon">autorenew</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.inProgress ?? 0 }}</div>
+          <div class="dashboard-metric-label">En progreso</div>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-metrics-row">
+      <div class="dashboard-metric-card orange">
+        <span class="material-icons dashboard-metric-icon">pause_circle_filled</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.pending ?? 0 }}</div>
+          <div class="dashboard-metric-label">Pendientes</div>
+        </div>
+      </div>
+      <div class="dashboard-metric-card red">
+        <span class="material-icons dashboard-metric-icon">error</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.overdue ?? 0 }}</div>
+          <div class="dashboard-metric-label">Atrasadas</div>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-user-summary" *ngIf="member">
+      <div class="dashboard-user-avatar">
+        <img *ngIf="member.imgUrl; else defaultAvatar" [src]="member.imgUrl" alt="Avatar" />
+        <ng-template #defaultAvatar>
+          <span class="material-icons dashboard-avatar-icon">person</span>
+        </ng-template>
+      </div>
+      <div class="dashboard-user-info">
+        <div class="dashboard-user-name">{{ member.name }} {{ member.surname }}</div>
+        <div class="dashboard-user-username">{{ member.username }}</div>
+        <div class="dashboard-user-email">{{ member.email }}</div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loadingMetrics" class="loading-tasks">
+    <span class="material-icons spin">autorenew</span>
+  </div>
+</div>

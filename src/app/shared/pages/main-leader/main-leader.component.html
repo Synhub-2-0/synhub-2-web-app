@@ -1,0 +1,64 @@
+<div class="metrics-summary-card">
+  <div class="dashboard-summary-section" *ngIf="!loadingMetrics">
+    <div class="dashboard-header">
+      <span class="dashboard-title">Dashboard de métricas</span>
+      <span class="dashboard-subtitle">Resumen ejecutivo del grupo</span>
+    </div>
+    <div class="dashboard-metrics-row">
+      <div class="dashboard-metric-card green">
+        <span class="material-icons dashboard-metric-icon">check_circle</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.completed ?? 0 }}</div>
+          <div class="dashboard-metric-label">Completadas</div>
+        </div>
+      </div>
+      <div class="dashboard-metric-card teal">
+        <span class="material-icons dashboard-metric-icon">done_all</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.done ?? 0 }}</div>
+          <div class="dashboard-metric-label">Terminadas</div>
+        </div>
+      </div>
+      <div class="dashboard-metric-card blue">
+        <span class="material-icons dashboard-metric-icon">autorenew</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.inProgress ?? 0 }}</div>
+          <div class="dashboard-metric-label">En progreso</div>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-metrics-row">
+      <div class="dashboard-metric-card orange">
+        <span class="material-icons dashboard-metric-icon">pause_circle_filled</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.pending ?? 0 }}</div>
+          <div class="dashboard-metric-label">Pendientes</div>
+        </div>
+      </div>
+      <div class="dashboard-metric-card red">
+        <span class="material-icons dashboard-metric-icon">error</span>
+        <div>
+          <div class="dashboard-metric-value">{{ overview.overdue ?? 0 }}</div>
+          <div class="dashboard-metric-label">Atrasadas</div>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+    <div class="dashboard-members-list">
+      <span class="members-title">Integrantes del grupo:</span>
+      <div *ngIf="members.length > 0">
+        <div *ngFor="let member of members" class="member-row">
+          <img *ngIf="member.imgUrl" [src]="member.imgUrl" class="profile-image" />
+          <span class="member-name">{{ member.name }} {{ member.surname }}</span>
+          <span class="member-username">{{ member.username }}</span>
+        </div>
+      </div>
+      <div *ngIf="members.length === 0" class="empty-section">
+        <span>No hay integrantes en el grupo.</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loadingMetrics" class="loading-tasks">
+    <span class="material-icons spin">autorenew</span>
+  </div>
+</div>

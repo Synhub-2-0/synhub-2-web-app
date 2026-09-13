@@ -1,0 +1,58 @@
+@if (request) {
+  <div class="validation-container">
+    <div class="header-row">
+      <img src="{{request.task.member?.urlImage}}" class="avatar" alt="avatar" />
+      <span class="member-name">{{ request.task.member?.name }} {{ request.task.member?.surname }}</span>
+    </div>
+
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-title">{{ request.task.title }}</div>
+        <div class="divider"></div>
+        <div class="description">Comentario: {{ request.task.description }}</div>
+      </div>
+      <div class="dates">
+        <div class="date-label">
+          {{ request.task.status === 'COMPLETED' ? 'Tiempo de desarrollo' : 'Tiempo de desarrollo asignado' }}
+        </div>
+        <div class="date-value">
+          @if (request.task.status === 'COMPLETED') {
+          <ng-container>
+            {{ createdDate(request.task.createdAt) }}
+            </ng-container>
+          } @else {
+            <ng-template>
+              {{ createdDate(request.task.createdAt) }} - {{ dueDate(request.task.dueDate) }}
+            </ng-template>
+          }
+        </div>
+        <div class="status-bar" [ngStyle]="{'background-color': statusColor(request.requestType)}"></div>
+      </div>
+    </div>
+
+    <button class="action-btn reprogram" (click)="reprogram()">
+      <span class="material-icons">date_range</span>
+      Reprogramar
+    </button>
+
+    @if (request.requestType === 'SUBMISSION') {
+      <button
+        class="action-btn complete"
+        (click)="markAsCompleted()"
+      >
+        <span class="material-icons">check</span>
+        Marcar como completado
+      </button>
+    }
+
+    @if (request.requestType === 'MODIFICATION') {
+      <button
+        class="action-btn deny"
+        (click)="denyModification()"
+      >
+        <span class="material-icons">clear</span>
+        Denegar
+      </button>
+    }
+  </div>
+}

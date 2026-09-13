@@ -1,0 +1,17 @@
+<div class="analytics-leader-screen">
+  <ng-container *ngIf="loading">
+    <div class="loading-container">Cargando métricas...</div>
+  </ng-container>
+  <ng-container *ngIf="error">
+    <div class="error-container">{{ error }}</div>
+  </ng-container>
+  <ng-container *ngIf="!loading && !error">
+    <app-analytics-leader
+      [analytics]="analyticsResource"
+      [membersWithRescheduled]="membersWithRescheduled"
+      [avgCompletionMembers]="avgCompletionMembers"
+      [inProgressDurationsMembers]="inProgressDurationsMembers"
+      [formatInProgressDuration]="formatInProgressDuration">
+    </app-analytics-leader>
+  </ng-container>
+</div>
