@@ -1,13 +1,13 @@
-<div>
+<div class="w-full">
   @if (invitations.length === 0) {
-    <p class="no-invitations-message">No tienes invitaciones pendientes.</p>
+    <p class="text-slate-500 italic text-lg py-4">No tienes invitaciones pendientes.</p>
   }
+  
   @if (invitations.length > 0) {
-    <div class="invitations-list">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       @for (invitation of invitations; track invitation.id) {
         <app-invitation
           [invitation]="invitation"
-          class="invitation-card"
           (invitationChanged)="reloadInvitations()"
         ></app-invitation>
       }
