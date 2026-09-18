@@ -12,39 +12,43 @@ import {forkJoin} from 'rxjs';
   standalone: true,
   imports: [CommonModule, NgForOf, NgIf, MatCardModule, MatIconModule],
   template: `
-    <div class="p-8 bg-white min-h-screen">
-      <h2 class="text-2xl font-bold mb-6">Integrantes</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="p-4 md:p-8 bg-white min-h-screen">
+      <h2 class="text-xl md:text-2xl font-bold mb-6">Integrantes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
         <mat-card
           *ngFor="let member of members; let idx = index"
-          class="rounded-2xl shadow-md bg-neutral-100 px-2 py-2"
-          style="cursor:pointer; min-width: 410px; max-width: 520px"
+          class="rounded-2xl shadow-md bg-neutral-100 p-2 cursor-pointer w-full transition-transform hover:-translate-y-1"
           (click)="goToTaskDetails(member.id)"
         >
-          <div class="flex items-center px-4 pt-4 pb-2">
-            <img [src]="member.imgUrl" alt="{{member.name}}" class="w-12 h-12 rounded-full mr-4 border border-gray-300 shadow" />
-            <span class="font-semibold text-xl text-slate-800">{{ member.name }} {{ member.surname }}</span>
+          <div class="flex flex-wrap items-center px-4 pt-4 pb-2 gap-3">
+            <img [src]="member.imgUrl" alt="{{member.name}}" class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-300 shadow object-cover" />
+            <span class="font-semibold text-lg md:text-xl text-slate-800 break-words flex-1">{{ member.name }} {{ member.surname }}</span>
           </div>
+
           <ng-container *ngIf="member.task">
-            <div class="rounded-xl shadow bg-[#1e4677] mt-3 mx-2 px-5 py-5 text-white">
-              <div class="text-xl font-semibold mb-2">{{ member.task.title }}</div>
+            <div class="rounded-xl shadow bg-[#1e4677] mt-3 mx-2 px-4 py-4 md:px-5 md:py-5 text-white">
+              <div class="text-lg md:text-xl font-semibold mb-2 truncate">{{ member.task.title }}</div>
               <hr class="my-1 border-blue-400 border-opacity-60">
-              <div class="text-base">{{ member.task.description }}</div>
+              <div class="text-sm md:text-base line-clamp-3">{{ member.task.description }}</div>
             </div>
-            <div class="mt-5 mx-6 h-3 rounded-full"
-              [ngStyle]="{ background: getBarColor(member.task.status) }">
+            <div class="mt-4 mx-4 md:mx-6 h-3 rounded-full bg-gray-200 overflow-hidden">
+              <div class="h-full w-full" [ngStyle]="{ background: getBarColor(member.task.status) }"></div>
             </div>
-            <div class="text-base text-center tracking-wide mt-1 mb-1 text-gray-700 font-medium">
-              {{ member.task.dueDate | date:'MM/dd/yyyy' }} - {{ member.task.createdAt | date:'MM/dd/yyyy' }}
+            <div class="text-sm md:text-base text-center tracking-wide mt-2 mb-2 text-gray-700 font-medium">
+              {{ member.task.dueDate | date:'dd/MM/yyyy' }} - {{ member.task.createdAt | date:'dd/MM/yyyy' }}
             </div>
           </ng-container>
+
           <ng-container *ngIf="!member.task">
-            <div class="rounded-xl shadow bg-gray-200 mt-4 mb-2 mx-3 px-4 py-4 text-gray-600 flex items-center justify-center min-h-20">Sin tareas</div>
+            <div class="rounded-xl shadow bg-gray-200 mt-4 mb-2 mx-2 px-4 py-4 text-gray-600 flex items-center justify-center min-h-[5rem]">
+              Sin tareas
+            </div>
           </ng-container>
         </mat-card>
       </div>
+
       <ng-template #noMembers>
-        <p class="text-gray-700">No hay integrantes para mostrar.</p>
+        <p class="text-gray-700 text-lg">No hay integrantes para mostrar.</p>
       </ng-template>
     </div>
   `,

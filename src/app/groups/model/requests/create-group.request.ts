@@ -1,4 +1,3 @@
-
 export class CreateGroupRequest {
   name: string;
   imgUrl: string;
