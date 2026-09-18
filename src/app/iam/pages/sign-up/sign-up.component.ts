@@ -28,7 +28,7 @@ export class SignUpComponent implements OnInit {
   submitted = false;
   showPassword = false;
   showConfirmPassword = false;
-  siteKey = '6Ldred4rAAAAAEUQavOTWU48abpsm4kFmtSyc3d2';
+  siteKey = '6LcClMEtAAAAAHn0NZIrK8UxM2PKSMGuLriU1hC5';
 
   @ViewChild('captchaElem') captchaElem?: ReCaptcha2Component;
 
