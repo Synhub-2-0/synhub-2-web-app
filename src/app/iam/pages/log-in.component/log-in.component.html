@@ -30,20 +30,6 @@
               La contraseña es <strong>requerida</strong>
             </mat-error>
           </mat-form-field>
-          <!-- ngx-captcha reCAPTCHA v2 -->
-          <div style="margin-bottom: 16px; display: flex; flex-direction: column; align-items: center;">
-            <ngx-recaptcha2 #captchaElem
-              [siteKey]="siteKey"
-              (reset)="handleReset()"
-              (expire)="handleExpire()"
-              (load)="handleLoad()"
-              (success)="handleSuccess($event)"
-              formControlName="recaptcha">
-            </ngx-recaptcha2>
-            <div *ngIf="loginForm.get('recaptcha')?.invalid && loginForm.get('recaptcha')?.touched" style="color: #d32f2f; font-size: 12px; margin-top: 8px; text-align: center;">
-              Por favor, completa el reCAPTCHA.
-            </div>
-          </div>
           <div class="button-container">
             <button mat-raised-button color="primary" class="custom-button-1" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
             <button mat-raised-button color="primary" class="custom-button-2" type="button" (click)="onGotoSignUp()">Registrarse</button>

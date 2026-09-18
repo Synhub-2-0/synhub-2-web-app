@@ -92,17 +92,6 @@
         </div>
         <div class="register-button-container">
           <div style="margin-bottom: 16px; display: flex; flex-direction: column; align-items: center;">
-            <ngx-recaptcha2 #captchaElem
-              [siteKey]="siteKey"
-              (reset)="handleReset()"
-              (expire)="handleExpire()"
-              (load)="handleLoad()"
-              (success)="handleSuccess($event)"
-              formControlName="recaptcha">
-            </ngx-recaptcha2>
-            <div *ngIf="registerForm.get('recaptcha')?.invalid && registerForm.get('recaptcha')?.touched" style="color: #d32f2f; font-size: 12px; margin-top: 8px; text-align: center;">
-              Por favor, completa el reCAPTCHA.
-            </div>
             <div class="register-button" style="margin-top: 16px;">
               <button
                 mat-raised-button
