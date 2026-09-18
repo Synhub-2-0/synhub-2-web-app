@@ -37,14 +37,14 @@ export class ViewTaskComponent {
     this.router.navigate([isMemberPath ? '/members/my-group/tasks' : '/leaders/my-group/tasks']);
   }
 
-  progressClass(): 'ok' | 'warn' | 'late' | 'unknown' {
-    if (!this.task?.dueDate) return 'unknown';
+  progressClass(): string {
+    if (!this.task?.dueDate) return 'bg-slate-200'; // unknown
     const end = new Date(this.task.dueDate).getTime();
     const start = this.task.createdAt ? new Date(this.task.createdAt).getTime() : Date.now();
-    if (end <= start) return Date.now() > end ? 'late' : 'unknown';
+    if (end <= start) return Date.now() > end ? 'bg-red-500' : 'bg-slate-200'; // late : unknown
     const now = Date.now();
-    if (now > end) return 'late';
+    if (now > end) return 'bg-red-500'; // late
     const ratio = (now - start) / (end - start);
-    return ratio < 0.7 ? 'ok' : 'warn';
+    return ratio < 0.7 ? 'bg-green-500' : 'bg-amber-500'; // ok : warn
   }
 }

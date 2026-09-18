@@ -1,37 +1,38 @@
-<section class="card">
-  <header class="card__head">
-    <h3 class="card__title">{{ task?.title || 'Tarea' }}</h3>
-    <span class="badge">{{ task?.status || '—' }}</span>
+<section class="flex flex-col gap-3 rounded-[18px] border border-slate-200 bg-slate-50 p-[18px] shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+  <header class="flex items-center justify-between gap-3">
+    <h3 class="m-0 min-w-0 overflow-hidden text-ellipsis whitespace-nowrap text-[1.2rem] font-bold text-slate-800">{{ task?.title || 'Tarea' }}</h3>
+    <span class="rounded-full bg-slate-200 px-2.5 py-1.5 text-[0.85rem] font-semibold text-slate-700">{{ task?.status || '—' }}</span>
   </header>
 
-  <div class="divider"></div>
+  <div class="h-[2px] rounded-sm bg-slate-200"></div>
 
-  <div *ngIf="loading" class="loading">Cargando…</div>
+  <div *ngIf="loading" class="p-2 text-center text-slate-500">Cargando…</div>
 
   <ng-container *ngIf="!loading">
-    <p class="desc">{{ task?.description || 'Sin descripción' }}</p>
+    <p class="min-h-[120px] rounded-[14px] border border-slate-200 bg-white p-3 text-slate-900 shadow-sm">{{ task?.description || 'Sin descripción' }}</p>
 
-    <div class="meta">
-      <span class="muted">Fecha de entrega: {{ dueLabel }}</span>
+    <div class="grid justify-items-center">
+      <span class="text-[0.9rem] text-slate-500">Fecha de entrega: {{ dueLabel }}</span>
     </div>
 
-    <div class="progress">
-      <div class="bar" [ngClass]="progressClass"></div>
+    <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-200">
+      <div class="h-full w-full" [ngClass]="progressClass"></div>
     </div>
 
-    <div class="meta">
-      <span class="muted">Tiempo restante: {{ remainingLabel }}</span>
+    <div class="grid justify-items-center">
+      <span class="text-[0.9rem] text-slate-500">Tiempo restante: {{ remainingLabel }}</span>
     </div>
 
-    <div class="comment">
-      <textarea rows="5" placeholder="Comentario:" [(ngModel)]="comment"></textarea>
+    <div class="w-full">
+      <textarea class="min-h-[140px] w-full resize-y rounded-[14px] border border-slate-200 bg-white p-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="5" placeholder="Comentario:" [(ngModel)]="comment"></textarea>
     </div>
 
-    <footer class="actions">
-      <button type="button" class="btn btn-comment" [disabled]="!comment.trim() || saving" (click)="submit()">
+    <footer class="mt-2 grid grid-cols-1 gap-3.5">
+      <!-- bg-amber-700 para pasar tests de contraste de Accesibilidad -->
+      <button type="button" class="appearance-none cursor-pointer rounded-full border-none bg-amber-700 px-[18px] py-3 font-bold text-white shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-[1px] hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] disabled:opacity-50 disabled:hover:translate-y-0" [disabled]="!comment.trim() || saving" (click)="submit()">
         Enviar comentario
       </button>
-      <button type="button" class="btn btn-cancel" (click)="cancel()">Cancelar</button>
+      <button type="button" class="appearance-none cursor-pointer rounded-full border-none bg-slate-300 px-[18px] py-3 font-bold text-slate-900 shadow-[0_4px_14px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-[1px] hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)]" (click)="cancel()">Cancelar</button>
     </footer>
   </ng-container>
 </section>

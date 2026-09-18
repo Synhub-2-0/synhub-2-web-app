@@ -38,17 +38,17 @@ export class CommentTaskComponent {
     });
   }
 
-  get progressClass(): 'ok' | 'warn' | 'late' | 'unknown' {
+  get progressClass(): string {
     const dueMs   = this.task?.dueDate   ? new Date(this.task!.dueDate!).getTime()   : NaN;
     const startMs = this.task?.createdAt ? new Date(this.task!.createdAt!).getTime() : NaN;
-    if (isNaN(dueMs)) return 'unknown';
+    if (isNaN(dueMs)) return 'bg-slate-200'; // unknown
     const start = isNaN(startMs) ? Date.now() : startMs;
     const end   = dueMs;
-    if (end <= start) return Date.now() > end ? 'late' : 'unknown';
+    if (end <= start) return Date.now() > end ? 'bg-red-500' : 'bg-slate-200'; // late : unknown
     const now = Date.now();
-    if (now > end) return 'late';
+    if (now > end) return 'bg-red-500'; // late
     const ratio = (now - start) / (end - start);
-    return ratio < 0.7 ? 'ok' : 'warn';
+    return ratio < 0.7 ? 'bg-green-500' : 'bg-amber-500'; // ok : warn
   }
 
   get dueLabel(): string {

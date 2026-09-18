@@ -1,43 +1,44 @@
-<section class="create">
-  <h3>Crear tarea</h3>
+<section class="mb-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+  <h3 class="mb-2.5 text-xl font-bold text-slate-800">Crear tarea</h3>
 
-  <div class="grid">
-    <input placeholder="Título" [(ngModel)]="title" />
-    <textarea rows="2" placeholder="Descripción" [(ngModel)]="description"></textarea>
+  <div class="grid grid-cols-1 gap-3">
+    <input class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Título" [(ngModel)]="title" />
 
-    <mat-form-field appearance="outline" class="w-full assignee-field">
+    <textarea class="min-h-[110px] w-full resize-y rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="2" placeholder="Descripción" [(ngModel)]="description"></textarea>
+
+    <mat-form-field appearance="outline" class="w-full">
       <mat-label>Asignar a</mat-label>
 
       <mat-select [(ngModel)]="memberId">
         <mat-select-trigger>
-          <span class="trigger no-pointer no-select">
+          <span class="pointer-events-none inline-flex select-none items-center gap-2 align-middle">
             <ng-container *ngIf="selectedMember; else noneTpl">
-              <img class="avatar" [src]="imgFor(selectedMember)" alt="avatar seleccionado" />
-              <span class="trigger-text">{{ memberLabel(selectedMember!) }}</span>
+              <img class="h-[22px] w-[22px] rounded-full object-cover" [src]="imgFor(selectedMember)" alt="avatar seleccionado" />
+              <span class="max-w-[280px] overflow-hidden text-ellipsis whitespace-nowrap">{{ memberLabel(selectedMember!) }}</span>
             </ng-container>
             <ng-template #noneTpl>
-              <span class="muted">Selecciona un miembro</span>
+              <span class="text-slate-500">Selecciona un miembro</span>
             </ng-template>
           </span>
         </mat-select-trigger>
 
         <mat-option *ngFor="let m of members" [value]="m.id">
-          <div class="opt">
-            <img class="avatar" [src]="imgFor(m)" alt="avatar miembro" />
-            <span class="opt-text">{{ memberLabel(m) }}</span>
+          <div class="flex items-center gap-2.5">
+            <img class="h-6 w-6 rounded-full object-cover" [src]="imgFor(m)" alt="avatar miembro" />
+            <span class="max-w-full overflow-hidden text-ellipsis whitespace-nowrap">{{ memberLabel(m) }}</span>
           </div>
         </mat-option>
       </mat-select>
     </mat-form-field>
 
-    <div class="dt-field">
-      <label for="due">Vencimiento</label>
-      <input id="due" type="datetime-local" [(ngModel)]="dueDateTime" />
+    <div class="flex flex-col gap-1.5">
+      <label for="due" class="font-bold text-slate-700">Vencimiento</label>
+      <input id="due" class="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-slate-900 shadow-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" type="datetime-local" [(ngModel)]="dueDateTime" />
     </div>
   </div>
 
-  <div class="actions">
-    <button mat-flat-button color="primary" class="btn-save" (click)="save()">Guardar</button>
-    <button mat-flat-button color="warn" class="btn-cancel" (click)="cancel()">Cancelar</button>
+  <div class="mt-4 flex items-center gap-4">
+    <button mat-flat-button color="primary" class="rounded-xl px-5 py-2.5 font-bold" (click)="save()">Guardar</button>
+    <button mat-flat-button color="warn" class="rounded-xl px-5 py-2.5 font-bold" (click)="cancel()">Cancelar</button>
   </div>
 </section>
