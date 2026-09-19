@@ -18,7 +18,7 @@ import {InvitationMemberComponent} from './invitations/pages/invitation-member/i
 import {AnalyticsLeaderPageComponent } from './analytics/pages/analytics-leader-page/analytics-leader-page.component';
 import {CreateGroupComponent} from '@app/groups/pages/create-group/create-group.component';
 import {MembersLeaderComponent} from '@app/groups/pages/members-leader/members-leader.component';
-import {TaskMemberDetailsComponent} from '@app/groups/components/task-member-details/task-member-details';
+import {TaskMemberDetailsComponent} from '@app/groups/components/task-member-details/task-member-details.component';
 import {CreateTaskComponent} from '@app/tasks/pages/create-task/create-task';
 import {EditTaskComponent} from '@app/tasks/pages/edit-task/edit-task';
 import {ViewTaskComponent} from '@app/tasks/pages/view-task/view-task';
