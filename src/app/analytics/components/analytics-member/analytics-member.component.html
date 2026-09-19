@@ -34,10 +34,11 @@
     <hr class="section-divider">
     <div class="member-card member-row">
       <div class="profile-image avatar">
-        <img *ngIf="member?.imgUrl; else defaultAvatar" [src]="member?.imgUrl" alt="Avatar" />
-        <ng-template #defaultAvatar>
+        @if (member?.imgUrl) {
+          <img ngSrc="{{member?.imgUrl}}" alt="Avatar" fill>
+        } @else {
           <span class="default-avatar">&#128100;</span>
-        </ng-template>
+        }
       </div>
       <span class="member-name">{{ member?.name }} {{ member?.surname }}</span>
       <span class="member-username">{{ member?.username }}</span>
@@ -54,13 +55,15 @@
         <div class="metric-label">Listado y total</div>
       </div>
     </div>
-    <div *ngIf="loadingTasks" class="loading-tasks">
-      <span class="material-icons spin">autorenew</span>
-    </div>
-    <div *ngIf="!loadingTasks && (memberTasks?.length ?? 0) === 0" class="empty-section">
-      No hay tareas asignadas.
-    </div>
-    <div *ngIf="!loadingTasks && (memberTasks?.length ?? 0) > 0">
+    @if (loadingTasks) {
+      <div class="loading-tasks">
+        <span class="material-icons spin">autorenew</span>
+      </div>
+    } @else if (!loadingTasks && !((memberTasks?.length ?? 0) > 0)) {
+      <div class="empty-section">
+        No hay tareas asignadas.
+      </div>
+    } @else {
       <div class="bar-chart-row">
         <span class="bar-chart-label">Total</span>
         <div class="bar-chart-bar-bg">
@@ -71,12 +74,14 @@
         </span>
       </div>
       <ul class="tasks-list">
-        <li *ngFor="let task of memberTasks; let i = index">
-          <span class="task-index">{{ i + 1 }}.</span>
-          <span class="task-title">{{ task?.title }}</span>
-        </li>
+        @for (task of memberTasks; track task.id) {
+          <li>
+            <span class="task-index">{{ $index + 1 }}.</span>
+            <span class="task-title">{{ task?.title }}</span>
+          </li>
+        }
       </ul>
-    </div>
+    }
   </div>
 
   <!-- Cantidad total de reprogramaciones -->
@@ -124,20 +129,25 @@
         <div class="metric-label">Duración individual y total</div>
       </div>
     </div>
-    <div *ngIf="inProgressTaskDurations.length === 0" class="empty-section">
-      No hay tareas en progreso.
-    </div>
-    <ul *ngIf="inProgressTaskDurations.length > 0" class="tasks-list progress-list">
-      <li *ngFor="let t of inProgressTaskDurations" class="progress-row">
-        <span class="progress-task-title">
-          <span class="material-icons progress-task-icon">assignment</span>
-          {{ t.title }}
-        </span>
-        <span class="progress-task-duration">
-          {{ formatInProgressDuration(t.duration) }}
-        </span>
-      </li>
-    </ul>
+    @if (!(inProgressTaskDurations.length > 0)) {
+      <div class="empty-section">
+        No hay tareas en progreso.
+      </div>
+    } @else {
+      <ul class="tasks-list progress-list">
+        @for (task of inProgressTaskDurations; track task) {
+          <li class="progress-row">
+            <span class="progress-task-title">
+            <span class="material-icons progress-task-icon">assignment</span>
+              {{ task.title }}
+            </span>
+            <span class="progress-task-duration">
+              {{ formatInProgressDuration(task.duration) }}
+            </span>
+          </li>
+        }
+      </ul>
+    }
     <div class="progress-total-row">
       <span class="material-icons schedule">schedule</span>
       <span class="progress-total-label">Total:</span>
