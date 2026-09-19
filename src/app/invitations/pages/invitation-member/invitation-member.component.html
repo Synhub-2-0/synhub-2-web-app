@@ -1,73 +1,90 @@
-<div class="invitations-screen">
+<div class="flex flex-col lg:flex-row items-center justify-center w-full h-full gap-8 lg:gap-12 p-4 md:p-8">
+
+  <!-- Caso: Invitación Activa -->
   @if(activeInvitation){
-    <div class="invitation-active-container">
-      <div style="font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center;">
-        <p>¡Tienes una invitación activa para unirte al grupo <strong>"{{activeInvitation.group.name}}"</strong></p>
+    <div class="flex w-full flex-col items-center justify-center gap-6 p-4">
+      <div class="text-center text-xl md:text-2xl font-bold text-slate-800">
+        <p>¡Tienes una invitación activa para unirte al grupo <strong>"{{activeInvitation.group.name}}"</strong>!</p>
       </div>
-      <div class="group-container-found">
-        <div class="group-found-header">
-          <img [src]="activeInvitation.group.imgUrl || 'assets/default-group-image.png'" alt="Grupo {{ activeInvitation.group.name }}" class="group-image">
-          <p>{{activeInvitation.group.name}}</p>
+
+      <div class="flex w-full max-w-md flex-col items-center justify-center gap-4 rounded-2xl bg-[#1A4E85] p-6 text-justify text-lg text-white shadow-lg shadow-slate-300">
+        <div class="flex w-full items-center gap-4 text-xl font-bold">
+          <img [src]="activeInvitation.group.imgUrl || 'assets/default-group-image.png'" alt="Grupo {{ activeInvitation.group.name }}" class="h-12 w-12 rounded-full object-cover border-2 border-white shadow-sm">
+          <p class="truncate">{{activeInvitation.group.name}}</p>
         </div>
-        <div style="border-top: 2px solid #fff; width: 100%;"></div>
-        <div class="group-found-body">
-          <p>Descripción: {{
+        
+        <div class="w-full border-t-2 border-white/50"></div>
+        
+        <div class="flex w-full flex-col gap-2 text-base">
+          <p><span class="font-semibold text-blue-200">Descripción:</span> {{
               activeInvitation.group.description.length > 500
                 ? (activeInvitation.group.description.slice(0, 500) + '...')
                 : activeInvitation.group.description
             }}</p>
-          <p>Cantidad de miembros: {{activeInvitation.group.memberCount}}</p>
-          <p>Código: {{activeInvitation.group.code}}</p>
+          <p><span class="font-semibold text-blue-200">Miembros:</span> {{activeInvitation.group.memberCount}}</p>
+          <p><span class="font-semibold text-blue-200">Código:</span> <span class="bg-blue-900 px-2 py-0.5 rounded">{{activeInvitation.group.code}}</span></p>
         </div>
-        <div class="group-found-button-container">
-          <button class="accept-button" (click)="onCheckInvitation()">Revisar estado de la solicitud</button>
-          <button class="decline-button" (click)="onCancelInvitation()">Cancelar solicitud</button>
+
+        <div class="mt-2 flex w-full flex-col gap-3">
+          <button class="w-full rounded-xl border-none bg-amber-500 px-6 py-3 text-base font-bold text-white shadow-md transition-transform hover:-translate-y-[1px] hover:shadow-lg cursor-pointer" (click)="onCheckInvitation()">Revisar estado de la solicitud</button>
+          <button class="w-full rounded-xl border-none bg-red-500 px-6 py-3 text-base font-bold text-white shadow-md transition-transform hover:-translate-y-[1px] hover:shadow-lg cursor-pointer" (click)="onCancelInvitation()">Cancelar solicitud</button>
         </div>
       </div>
     </div>
   }
+
+  <!-- Caso: Sin Invitación Activa (Buscador) -->
   @if (activeInvitation == null) {
-    <div class="search-container">
-      <div class="search-title">
+    <!-- Panel Izquierdo: Buscador -->
+    <div class="flex w-full max-w-md flex-col items-center justify-center gap-8 p-4">
+      <div class="text-center text-3xl md:text-4xl font-extrabold text-slate-800">
         <p>Únete a un grupo</p>
       </div>
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-bar-form">
-        <mat-form-field appearance="fill" class="custom-form-field full-width">
+
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="flex w-full flex-col items-center justify-center gap-5">
+        <mat-form-field appearance="fill" class="w-full">
           <mat-label>Buscar grupo</mat-label>
           <mat-icon matPrefix style="color: #888;">search</mat-icon>
-          <input matInput placeholder="Buscar grupo" type="text" formControlName="query">
+          <input matInput placeholder="Ingrese código del grupo" type="text" formControlName="query">
         </mat-form-field>
-        <button class="search-button" type="submit">Buscar Grupo</button>
+        <button class="w-full sm:w-auto rounded-xl border-none bg-blue-600 px-10 py-3 text-lg font-bold text-white shadow-md transition-transform hover:-translate-y-[1px] hover:shadow-lg cursor-pointer" type="submit">Buscar Grupo</button>
       </form>
+
       @if (searchError) {
-        <div class="group-container-error">
-          <p>{{ searchError }}</p>
+        <div class="w-full rounded-xl bg-red-500 p-3 text-center text-lg font-medium text-white shadow-md">
+          <p class="m-0">{{ searchError }}</p>
         </div>
       }
     </div>
+
+    <!-- Panel Derecho: Resultados -->
     @if (!groupFound){
-      <div class="group-container-no-group">
-        <p>Busca un grupo por su código único, solicitalo al líder de grupo o a uno de los miembros del equipo.</p>
+      <div class="w-full max-w-md rounded-2xl bg-[#1A4E85] p-6 text-center md:text-justify text-lg md:text-xl font-medium leading-relaxed text-white shadow-lg shadow-slate-300">
+        <p>Busca un grupo por su código único. Solicítalo al líder de grupo o a uno de los miembros del equipo.</p>
       </div>
     }
+
     @if (groupFound){
-      <div class="group-container-found">
-        <div class="group-found-header">
-          <img [src]="groupFound.imgUrl || 'assets/default-group-image.png'" alt="Grupo {{ groupFound.name }}" class="group-image">
-          <p>{{groupFound.name}}</p>
+      <div class="flex w-full max-w-md flex-col items-center justify-center gap-4 rounded-2xl bg-[#1A4E85] p-6 text-justify text-lg text-white shadow-lg shadow-slate-300">
+        <div class="flex w-full items-center gap-4 text-xl font-bold">
+          <img [src]="groupFound.imgUrl || 'assets/default-group-image.png'" alt="Grupo {{ groupFound.name }}" class="h-12 w-12 rounded-full object-cover border-2 border-white shadow-sm">
+          <p class="truncate">{{groupFound.name}}</p>
         </div>
-        <div style="border-top: 2px solid #fff; width: 100%;"></div>
-        <div class="group-found-body">
-          <p>Descripción: {{
+        
+        <div class="w-full border-t-2 border-white/50"></div>
+        
+        <div class="flex w-full flex-col gap-2 text-base">
+          <p><span class="font-semibold text-blue-200">Descripción:</span> {{
               groupFound.description.length > 500
                 ? (groupFound.description.slice(0, 500) + '...')
                 : groupFound.description
             }}</p>
-          <p>Cantidad de miembros: {{groupFound.memberCount}}</p>
-          <p>Código: {{groupFound.code}}</p>
+          <p><span class="font-semibold text-blue-200">Miembros:</span> {{groupFound.memberCount}}</p>
+          <p><span class="font-semibold text-blue-200">Código:</span> <span class="bg-blue-900 px-2 py-0.5 rounded">{{groupFound.code}}</span></p>
         </div>
-        <div class="group-found-button-container">
-          <button class="join-button" (click)="onJoinGroup()">Solicitar unirse</button>
+
+        <div class="mt-2 flex w-full flex-col items-center justify-center">
+          <button class="w-full sm:w-auto rounded-xl border-none bg-green-600 px-10 py-3 text-base font-bold text-white shadow-md transition-transform hover:-translate-y-[1px] hover:shadow-lg cursor-pointer" (click)="onJoinGroup()">Solicitar unirse</button>
         </div>
       </div>
     }

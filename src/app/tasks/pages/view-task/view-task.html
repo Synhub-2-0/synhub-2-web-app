@@ -1,41 +1,41 @@
-<section class="wrap" *ngIf="!loading && task; else loadingTpl">
-  <article class="card">
+<section class="flex justify-center p-6" *ngIf="!loading && task; else loadingTpl">
+  <article class="w-[min(860px,96%)] rounded-[22px] border border-slate-200 bg-slate-50 p-5 shadow-[0_6px_18px_rgba(0,0,0,0.06)]">
     <!-- header -->
-    <header class="head">
-      <div class="user">
+    <header class="grid gap-2.5">
+      <div class="flex items-center gap-3">
         <img *ngIf="task.member?.urlImage; else initials"
-             class="avatar" [src]="task.member?.urlImage" alt="avatar">
+             class="h-12 w-12 rounded-full object-cover" [src]="task.member?.urlImage" alt="avatar">
         <ng-template #initials>
-          <span class="avatar avatar--initials">
+          <span class="grid h-12 w-12 place-items-center rounded-full bg-blue-600 font-extrabold text-white">
             {{ (task.member?.name||'')[0] }}{{ (task.member?.surname||'')[0] }}
           </span>
         </ng-template>
-        <div class="user__info">
-          <div class="user__name">{{ task.member?.name }} {{ task.member?.surname }}</div>
+        <div class="flex flex-col">
+          <div class="font-bold text-slate-900">{{ task.member?.name }} {{ task.member?.surname }}</div>
         </div>
       </div>
-      <div class="title">{{ task.title }}</div>
+      <div class="text-xl font-bold text-slate-800">{{ task.title }}</div>
     </header>
 
-    <div class="divider"></div>
+    <div class="my-2.5 h-[2px] rounded-sm bg-slate-200"></div>
 
-    <div class="desc">{{ task.description || 'Sin descripción' }}</div>
+    <div class="min-h-[110px] rounded-[14px] border border-slate-200 bg-white p-3.5 text-slate-900 shadow-sm">{{ task.description || 'Sin descripción' }}</div>
 
-    <div class="meta">
-      <div class="progress">
-        <div class="bar" [ngClass]="progressClass()"></div>
+    <div class="mt-3 grid justify-items-center gap-2">
+      <div class="h-3 w-full overflow-hidden rounded-full bg-slate-100 shadow-inner">
+        <div class="h-full w-full" [ngClass]="progressClass()"></div>
       </div>
-      <small class="muted">
+      <small class="text-[0.95rem] text-slate-500">
         {{ task.createdAt | date:'dd/MM/yyyy' }} - {{ task.dueDate | date:'dd/MM/yyyy' }}
       </small>
     </div>
 
-    <footer class="actions">
-      <button class="btn btn--back" (click)="back()">Volver</button>
+    <footer class="mt-4 flex justify-center">
+      <button class="cursor-pointer rounded-xl border-none bg-red-600 px-5 py-3 font-bold text-white shadow-[0_3px_10px_rgba(0,0,0,0.12)] transition-all hover:-translate-y-[1px] hover:shadow-[0_6px_14px_rgba(0,0,0,0.18)]" (click)="back()">Volver</button>
     </footer>
   </article>
 </section>
 
 <ng-template #loadingTpl>
-  <div class="loading">Cargando…</div>
+  <div class="p-6 text-center text-slate-500">Cargando…</div>
 </ng-template>

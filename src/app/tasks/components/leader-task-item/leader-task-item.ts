@@ -64,26 +64,26 @@ export class LeaderTaskItemComponent {
     return ini.toUpperCase() || 'U';
   }
 
-  get progressClass(): 'ok' | 'warn' | 'late' | 'unknown' | 'hold' | 'done' {
+  get progressClass(): string {
     const status = this.task?.status;
 
-    if (status === TaskStatus.ON_HOLD) return 'hold';
-    if (status === TaskStatus.DONE) return 'done';
-    if (status === TaskStatus.COMPLETED) return 'ok';
-    if (status === TaskStatus.EXPIRED) return 'late';
+    if (status === TaskStatus.ON_HOLD) return 'bg-amber-500';
+    if (status === TaskStatus.DONE) return 'bg-blue-500';
+    if (status === TaskStatus.COMPLETED) return 'bg-green-500';
+    if (status === TaskStatus.EXPIRED) return 'bg-red-500';
 
     const dueMs   = this.task?.dueDate   ? new Date(this.task.dueDate).getTime()   : NaN;
     const startMs = this.task?.createdAt ? new Date(this.task.createdAt!).getTime() : NaN;
-    if (isNaN(dueMs)) return 'unknown';
+    if (isNaN(dueMs)) return 'bg-slate-200';
 
     const start = isNaN(startMs) ? Date.now() : startMs;
     const end   = dueMs;
-    if (end <= start) return Date.now() > end ? 'late' : 'unknown';
+    if (end <= start) return Date.now() > end ? 'bg-red-500' : 'bg-slate-200';
 
     const now = Date.now();
-    if (now > end) return 'late';
+    if (now > end) return 'bg-red-500';
 
     const ratio = (now - start) / (end - start);
-    return ratio < 0.7 ? 'ok' : 'warn';
+    return ratio < 0.7 ? 'bg-green-500' : 'bg-amber-500';
   }
 }

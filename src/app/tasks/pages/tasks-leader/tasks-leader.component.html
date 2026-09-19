@@ -1,14 +1,14 @@
 <ng-container *ngIf="totalCount() > 0; else emptyTpl">
-  <section class="toolbar">
-    <label>
+  <section class="mb-7 flex items-center gap-4">
+    <label class="text-[0.95rem] font-semibold text-slate-700">
       Estado:
-      <select [(ngModel)]="filter" (ngModelChange)="load()">
+      <select [(ngModel)]="filter" (ngModelChange)="load()" class="ml-2 cursor-pointer rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-[0.95rem] text-slate-900 shadow-sm transition-all duration-200 hover:border-blue-600 hover:shadow-[0_2px_6px_rgba(37,99,235,0.2)] focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600">
         <option *ngFor="let s of statusOptions" [ngValue]="s">{{ labelFor(s) }}</option>
       </select>
     </label>
   </section>
 
-  <section class="list">
+  <section class="grid w-full grid-cols-1 items-start gap-6 lg:grid-cols-2">
     <leader-task-item
       *ngFor="let t of filtered()"
       [task]="t"
@@ -18,11 +18,11 @@
 </ng-container>
 
 <ng-template #emptyTpl>
-  <section class="empty">
-    <div class="empty-card">
+  <section class="flex items-center justify-center p-4 py-12 md:p-12">
+    <div class="w-[min(90%,540px)] max-w-[540px] rounded-2xl bg-[#17497b] px-9 py-7 text-center text-[1.6rem] font-bold leading-snug text-white shadow-[0_8px_18px_rgba(0,0,0,0.18)]">
       <div>No hay tareas<br>programadas</div>
     </div>
   </section>
 </ng-template>
 
-<button class="fab" routerLink="/leaders/my-group/tasks/create">+</button>
+<button class="fixed bottom-6 right-6 h-14 w-14 cursor-pointer rounded-2xl border-none bg-[#1d4f91] text-center text-[32px] leading-[56px] text-white shadow-[0_4px_10px_rgba(0,0,0,0.2)] transition-all duration-200 hover:scale-105 hover:shadow-[0_6px_14px_rgba(0,0,0,0.3)]" routerLink="/leaders/my-group/tasks/create">+</button>

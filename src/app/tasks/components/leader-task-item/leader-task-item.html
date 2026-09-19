@@ -1,48 +1,50 @@
-<article class="card card--clickable" (click)="open()">
-  <header class="card__head">
-    <div class="user">
+<article class="flex cursor-pointer flex-col gap-3 rounded-xl border border-slate-200 bg-white p-[18px] shadow-[0_6px_18px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_8px_22px_rgba(0,0,0,0.1)]" (click)="open()">
+  <header class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
       <ng-container *ngIf="task.member?.urlImage; else initialsTpl">
-        <img class="avatar" [src]="task.member?.urlImage" alt="avatar" />
+        <img class="h-[42px] w-[42px] rounded-full border-2 border-white object-cover shadow-sm" [src]="task.member?.urlImage" alt="avatar" />
       </ng-container>
       <ng-template #initialsTpl>
-        <span class="avatar avatar--initials">{{ initials }}</span>
+        <span class="grid h-[42px] w-[42px] place-items-center rounded-full bg-blue-600 font-bold text-white shadow-sm">{{ initials }}</span>
       </ng-template>
 
-      <div class="user__info">
-        <div class="user__name">{{ task.member?.name }} {{ task.member?.surname }}</div>
-        <div class="title">{{ task.title }}</div>
+      <div class="flex flex-col">
+        <div class="font-bold text-slate-900">{{ task.member?.name }} {{ task.member?.surname }}</div>
+        <div class="text-[1.05rem] font-bold text-slate-800">{{ task.title }}</div>
       </div>
     </div>
 
-    <span class="badge">{{ task.status }}</span>
+    <span class="rounded-full bg-slate-100 px-2.5 py-1.5 text-[0.85rem] font-semibold text-slate-700">{{ task.status }}</span>
   </header>
 
-  <div class="divider"></div>
+  <div class="h-[2px] rounded-sm bg-slate-200"></div>
 
-  <p class="desc" *ngIf="task.description; else noDesc">{{ task.description }}</p>
+  <p class="min-h-[72px] rounded-xl border border-slate-200 bg-white p-3 text-slate-900 shadow-sm" *ngIf="task.description; else noDesc">{{ task.description }}</p>
   <ng-template #noDesc>
-    <p class="desc desc--empty">Sin descripción</p>
+    <p class="min-h-[72px] rounded-xl border border-slate-200 bg-white p-3 text-slate-400 italic shadow-sm">Sin descripción</p>
   </ng-template>
 
-  <div class="meta">
-    <div class="progress">
-      <div class="bar" [ngClass]="progressClass"></div>
+  <div class="grid justify-items-center gap-2">
+    <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-100 shadow-inner">
+      <div class="h-full w-full" [ngClass]="progressClass"></div>
     </div>
-    <small class="muted" *ngIf="task.dueDate">
+    <small class="text-[0.85rem] text-slate-500" *ngIf="task.dueDate">
       Vence: {{ task.dueDate | date:'mediumDate':'UTC' }}
     </small>
   </div>
 
-  <footer class="actions actions--primary" *ngIf="canModify">
-    <button type="button" class="btn btn--warn" (click)="edit($event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="btn__icon">
+  <footer class="mt-1 flex justify-center gap-3" *ngIf="canModify">
+    <!-- Botón Warn: Contraste corregido con bg-amber-700 -->
+    <button type="button" class="inline-flex cursor-pointer items-center gap-2 rounded-xl border-none bg-amber-700 px-4 py-2.5 font-bold text-white shadow-md transition-all duration-150 hover:-translate-y-[1px] hover:brightness-105 hover:shadow-lg active:translate-y-0 active:shadow-md" (click)="edit($event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="block h-[18px] w-[18px] fill-white">
         <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm14.71-9.04c.39-.39.39-1.02 0-1.41l-2.5-2.5a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.99-1.67z"/>
       </svg>
       Editar
     </button>
 
-    <button type="button" class="btn btn--danger" (click)="confirmRemove($event)">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="btn__icon">
+    <!-- Botón Danger: Contraste corregido con bg-red-700 -->
+    <button type="button" class="inline-flex cursor-pointer items-center gap-2 rounded-xl border-none bg-red-700 px-4 py-2.5 font-bold text-white shadow-md transition-all duration-150 hover:-translate-y-[1px] hover:brightness-105 hover:shadow-lg active:translate-y-0 active:shadow-md" (click)="confirmRemove($event)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="block h-[18px] w-[18px] fill-white">
         <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1z"/>
       </svg>
       Borrar

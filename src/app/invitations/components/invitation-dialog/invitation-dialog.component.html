@@ -1,9 +1,17 @@
-<div class="confirmation-dialog">
-  <div class="text">
-    <p>Estas por aceptar a: {{invitation.member.name}} {{invitation.member.surname}} al grupo, ¿Estás seguro que deseas aceptar la invitación?.</p>
+<div class="flex flex-col items-center justify-center p-6 text-center">
+  <div class="mb-6">
+    <p class="text-[1.1rem] font-medium text-slate-800 leading-snug">
+      Estás por aceptar a <strong class="text-blue-700">{{invitation.member.name}} {{invitation.member.surname}}</strong> al grupo.<br>
+      ¿Estás seguro que deseas aceptar la invitación?
+    </p>
   </div>
-  <div class="button-container">
-    <button (click)="onAcceptRequest()" style="color: #4CAF50;">Aceptar</button>
-    <button (click)="onNoClick()" style="color: #d32f2f">Cancelar</button>
+  
+  <div class="flex w-full flex-row justify-around gap-4 sm:gap-6">
+    <button class="w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2 font-bold text-red-600 transition-colors hover:bg-red-50 focus:outline-none" (click)="onNoClick()">
+      Cancelar
+    </button>
+    <button class="w-full cursor-pointer rounded-lg border-none bg-green-600 px-4 py-2 font-bold text-white shadow-sm transition-transform hover:-translate-y-[1px] hover:shadow-md focus:outline-none" (click)="onAcceptRequest()">
+      Aceptar
+    </button>
   </div>
 </div>

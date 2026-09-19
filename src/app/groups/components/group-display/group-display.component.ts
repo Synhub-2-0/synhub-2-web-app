@@ -20,68 +20,67 @@ import {ConfirmationDialogComponent} from '@app/shared/components/confirmation-d
     MatIconModule
   ],
   template: `
-    <div class="w-full h-full">
+    <div class="w-full h-full p-4 lg:p-0">
       @if (loading) {
         <div class="w-full h-full flex justify-center items-center">
-          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cached" class="animate-spin"></mat-icon>
+          <mat-icon aria-hidden="false" aria-label="Cargando" fontIcon="cached" class="animate-spin"></mat-icon>
         </div>
       } @else {
-        @if (hasGroup){
-          <div class="w-full h-full grid grid-cols-2 gap-16 min-h-0">
-            <div class="w-full h-full flex flex-col gap-7">
-              <h2 class="text-2xl font-bold">Grupo</h2>
+        @if (hasGroup) {
+          <div class="w-full h-auto lg:h-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 min-h-0">
+            <div class="w-full h-full flex flex-col gap-6 lg:gap-7">
+              <h2 class="text-xl lg:text-2xl font-bold">Grupo</h2>
 
               <app-profile-image-display [groupName]="group.name" alt="Imagen del grupo" [imgSrc]="group.imgUrl"/>
 
               <div class="text-white flex justify-center items-center">
-                <div class="bg-[#4A90E2] rounded-2xl py-2 px-6 text-xl">
-                  #{{ group.code}}
+                <div class="bg-[#4A90E2] rounded-2xl py-2 px-6 text-lg lg:text-xl">
+                  #{{ group.code }}
                 </div>
               </div>
               <div class="w-full flex-1">
-                <div class="w-full h-full rounded-3xl bg-[#1A4E85] p-8 text-white text-center text-xl flex items-center ">
+                <div class="w-full h-full rounded-3xl bg-[#1A4E85] p-6 lg:p-8 text-white text-center text-lg lg:text-xl flex items-center justify-center">
                   @if (group.description.length > 200) {
-                    {{ group.description.slice(0, 200) + '...'}}
+                    {{ group.description.slice(0, 200) + '...' }}
                   } @else {
                     {{ group.description }}
                   }
                 </div>
               </div>
             </div>
-            <div class="h-full flex flex-col gap-7 min-h-0">
-              <h2 class="text-2xl font-bold">Miembros</h2>
-              @if (hasMembers) {
-                <div class="flex-1  rounded-3xl bg-[#F4F4F4] p-8 text-black text-center text-xl min-h-0">
-                  <div class="bg-white rounded-2xl h-full">
-                    <div class="flex flex-col p-4 gap-4 h-full overflow-y-auto">
 
+            <div class="h-[400px] lg:h-full flex flex-col gap-6 lg:gap-7 min-h-0">
+              <h2 class="text-xl lg:text-2xl font-bold">Miembros</h2>
+              @if (hasMembers) {
+                <div class="flex-1 rounded-3xl bg-[#F4F4F4] p-4 lg:p-8 text-black text-center text-xl min-h-0 flex flex-col">
+                  <div class="bg-white rounded-2xl h-full flex-1 min-h-0">
+                    <div class="flex flex-col p-4 gap-4 h-full overflow-y-auto">
                       @for (member of members; track member.id) {
-                        <div class="flex justify-between items-center">
-                          <div class="inline mb-4 md:mb-0 md:flex items-center ">
+                        <div class="flex justify-between items-center gap-2">
+                          <div class="flex items-center min-w-0">
                             <img [src]="member.imgUrl" [alt]="member.name"
-                                 class="aspect-square rounded-full w-13 object-cover shadow-md shadow-gray-800 mr-4" />
-                            <h3 class="text-md font-medium"> {{ member.name }} </h3>
+                                 class="aspect-square rounded-full w-10 lg:w-12 object-cover shadow-md shadow-gray-800 mr-3 lg:mr-4" />
+                            <h3 class="text-sm lg:text-md font-medium text-left truncate">{{ member.name }}</h3>
                           </div>
                           <button
                             (click)="openDialog(member.name, member.id)"
-                            class="bg-gray-300 flex items-center px-1 py-2 rounded hover:bg-red-400" >
+                            class="bg-gray-300 flex items-center px-2 py-2 rounded hover:bg-red-400 transition-colors">
                             <mat-icon aria-hidden="false" aria-label="delete" fontIcon="delete" />
                           </button>
                         </div>
                       }
-
                     </div>
                   </div>
                 </div>
               } @else {
-                <div class="flex-1 w-full h-full rounded-3xl bg-[#1A4E85] p-8 text-white text-center text-xl ">
-                  Tu grupo no tiene integrantes, brindale el código a tus compañeros de proyecto para poder unirse al grupo
+                <div class="flex-1 w-full h-full rounded-3xl bg-[#1A4E85] p-6 lg:p-8 text-white text-center text-lg lg:text-xl flex items-center justify-center">
+                  Tu grupo no tiene integrantes, bríndale el código a tus compañeros de proyecto para poder unirse.
                 </div>
               }
             </div>
           </div>
         } @else {
-          <h2 class="text-2xl font-bold">Grupo</h2>
+          <h2 class="text-xl lg:text-2xl font-bold mb-4">Grupo</h2>
           <app-no-group-display/>
         }
       }
