@@ -59,7 +59,7 @@
       <div class="loading-tasks">
         <span class="material-icons spin">autorenew</span>
       </div>
-    } @else if (!loadingTasks && !((memberTasks?.length ?? 0) > 0)) {
+    } @else if (!loadingTasks && !(memberTasks.length > 0)) {
       <div class="empty-section">
         No hay tareas asignadas.
       </div>
