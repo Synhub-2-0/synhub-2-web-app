@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Member } from '../../../shared/model/member.entity';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { Member } from '@app/shared/model/member.entity';
 
 @Component({
   selector: 'app-analytics-member',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgOptimizedImage],
   templateUrl: './analytics-member.component.html',
   styleUrl: './analytics-member.component.css'
 })

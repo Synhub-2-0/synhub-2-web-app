@@ -5,7 +5,7 @@
         <p style="font-size: 40px; font-weight: bold; color: #4A90E2;">Syn</p>
         <p style="font-size: 40px; font-weight: bold;">hub</p>
       </div>
-      <img src="assets/images/synhub_logo.png" alt="Synhub Logo" class="synhub-logo">
+      <img ngSrc="assets/images/synhub_logo.png" alt="Synhub Logo" class="synhub-logo" height="1403" width="586">
     </div>
     <div class="login-form">
       <div class = "form">
@@ -18,17 +18,17 @@
             <mat-label>Usuario</mat-label>
             <mat-icon matPrefix style="color: #888;">person</mat-icon>
             <input matInput formControlName="username" placeholder="Usuario" type="text" required>
-            <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
-              El usuario es <strong>requerido</strong>
-            </mat-error>
+            @if (loginForm.get('username')?.hasError('required')) {
+              <mat-error>El usuario es <strong>requerido</strong>.</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="fill" class="custom-form-field full-width">
             <mat-label>Contraseña</mat-label>
             <mat-icon matPrefix style="color: #888;">lock</mat-icon>
             <input matInput formControlName="password" placeholder="Contraseña" type="password" required>
-            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-              La contraseña es <strong>requerida</strong>
-            </mat-error>
+            @if (loginForm.get('password')?.hasError('required')) {
+              <mat-error>La contraseña es <strong>requerida</strong>.</mat-error>
+            }
           </mat-form-field>
           <div class="button-container">
             <button mat-raised-button color="primary" class="custom-button-1" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>

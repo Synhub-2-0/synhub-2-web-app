@@ -1,11 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule,} from '@angular/material/input';
 import {CommonModule} from '@angular/common';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {AuthService} from '../../services/auth.service';
+import {MatButtonModule} from '@angular/material/button';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-sign-up.component',
@@ -15,32 +23,19 @@ import {AuthService} from '../../services/auth.service';
     ReactiveFormsModule,
     CommonModule,
     MatIconModule,
-    MatButtonToggleGroup,
-    MatButtonToggle
+    MatButtonModule,
+    MatButtonToggleModule
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.css'
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent {
   registerForm: FormGroup;
   submitted = false;
   showPassword = false;
   showConfirmPassword = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
-    this.registerForm = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
-      imgUrl: ['', [Validators.required, Validators.pattern('https?://.+')]],
-      role: ['', Validators.required]
-    }, { validators: this.passwordsMatchValidator });
-  }
-
-  ngOnInit() {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -71,9 +66,9 @@ export class SignUpComponent implements OnInit {
     this.authService.signUp(signUpRequest);
   }
 
-  passwordsMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
+  passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 }
