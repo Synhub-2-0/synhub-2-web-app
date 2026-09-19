@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import {LogInComponent} from './iam/pages/log-in.component/log-in.component';
+import {LogInComponent} from '@app/iam/pages/log-in/log-in.component';
 import {SignUpComponent} from './iam/pages/sign-up/sign-up.component';
 import {MainMemberComponent} from './shared/pages/main-member/main-member.component';
 import {MainLeaderComponent} from './shared/pages/main-leader/main-leader.component';
