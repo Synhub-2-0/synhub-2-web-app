@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {DetailsService} from '../../../shared/services/details.service';
+import {DetailsService} from '@app/shared/services/details.service';
 import {Invitation} from '../../model/invitation.entity';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Router} from '@angular/router';

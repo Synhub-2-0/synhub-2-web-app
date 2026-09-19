@@ -1,12 +1,15 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Invitation} from '../../model/invitation.entity';
-import {DetailsService} from '../../../shared/services/details.service';
+import {DetailsService} from '@app/shared/services/details.service';
 import {MatDialog} from '@angular/material/dialog';
 import {InvitationDialogComponent} from '../invitation-dialog/invitation-dialog.component';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-invitation',
-  imports: [],
+  imports: [
+    NgOptimizedImage
+  ],
   templateUrl: './invitation.component.html',
   styleUrl: './invitation.component.css'
 })
