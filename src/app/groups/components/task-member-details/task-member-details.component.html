@@ -1,0 +1,51 @@
+<div class="p-4 md:p-8 bg-white min-h-screen">
+  <label class="text-lg md:text-xl mb-6 block font-semibold text-slate-900">
+    Estado:
+    <select class="rounded px-4 py-2 ml-2 text-base md:text-lg border border-gray-300 w-full sm:w-auto mt-2 sm:mt-0" [(ngModel)]="selectedStatus" (change)="filtrar()">
+      <option value="ALL">todos</option>
+      @for (status of statusOptions; track status) {
+        <option [value]="status">{{ status }}</option>
+      }
+    </select>
+  </label>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+    @if (filteredTasks.length === 0) {
+      <p class="text-slate-700 text-lg md:text-xl mt-10">No hay tareas para mostrar para este miembro.</p>
+    } @else {
+      @for (task of filteredTasks; track task.id) {
+        <div class="bg-white w-full rounded-2xl border border-gray-100 px-5 md:px-8 py-6 shadow-sm">
+          <div class="flex flex-wrap sm:flex-nowrap items-center mb-4 gap-3">
+            <img ngSrc="{{task.member.urlImage}}"
+                 class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-200 object-cover" alt="avatar" fill/>
+            <div class="flex-1 min-w-0">
+              <div class="font-semibold text-base md:text-lg text-slate-900 mb-0.5 truncate">
+                {{ task.member.name }} {{ task.member.surname }}
+              </div>
+              <div class="text-xl md:text-2xl font-bold text-gray-900 truncate">
+                {{ task.title }}
+              </div>
+            </div>
+            <div class="w-full sm:w-auto mt-2 sm:mt-0 px-4 py-1.5 rounded-full bg-gray-200 text-slate-700 text-sm md:text-lg font-semibold shadow text-center tracking-wide">
+              {{ task.status }}
+            </div>
+          </div>
+          <hr class="border border-gray-100 my-3">
+          <div class="rounded-xl bg-gray-50 text-gray-900 p-4 text-base md:text-lg mb-3 min-h-[120px] flex items-center">
+            {{ task.description }}
+          </div>
+          <div class="w-full h-3 mb-2 mt-4 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              class="h-full rounded-full"
+              [ngStyle]="{ background: getColor(task.status), width: '100%' }">
+            </div>
+          </div>
+          <div class="text-sm md:text-lg text-gray-500 text-center tracking-wide mt-4 mb-0 font-medium">
+            Vence: {{ task.dueDate | date:'MMM d, yyyy' }}
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+</div>
