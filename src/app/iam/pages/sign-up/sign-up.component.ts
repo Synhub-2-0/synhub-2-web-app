@@ -60,7 +60,7 @@ export class SignUpComponent {
       imgUrl: formValue.imgUrl,
       email: formValue.email,
       password: formValue.password,
-      roles: [formValue.role === 'leader' ? 'ROLE_LEADER' : 'ROLE_MEMBER']
+      accountRoles: ['ROLE_USER']
     };
 
     this.authService.signUp(signUpRequest);
