@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import {provideHttpClient, withInterceptors} from '@angular/common/http';
-import {authInterceptor} from './iam/services/auth-interceptor';
+import {iamInterceptor} from '@app/iam/infrastructure/iam.interceptor';
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
 
 
@@ -14,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient( withInterceptors([authInterceptor]) )
+    provideHttpClient( withInterceptors([iamInterceptor]) )
   ]
 };

@@ -1,10 +1,8 @@
 import { Routes } from '@angular/router';
-import {LogInComponent} from '@app/iam/pages/log-in/log-in.component';
-import {SignUpComponent} from './iam/pages/sign-up/sign-up.component';
 import {MainMemberComponent} from './shared/pages/main-member/main-member.component';
 import {MainLeaderComponent} from './shared/pages/main-leader/main-leader.component';
 import {MainComponent} from './public/pages/main/main.component';
-import {authGuard} from './iam/services/auth-guard';
+import {iamGuard} from '@app/iam/infrastructure/iam.guard';
 import {MyGroupLeaderComponent} from './groups/pages/my-group-leader/my-group-leader.component';
 
 import {InvitationsLeaderComponent} from './invitations/pages/invitations-leader/invitations-leader.component';
@@ -26,10 +24,11 @@ import {CommentTaskComponent} from '@app/tasks/pages/comment-task/comment-task';
 import {ValidationPageComponent} from '@app/requests/pages/validation-page/validation-page.component';
 import {EditValidationComponent} from '@app/requests/pages/edit-validation/edit-validation.component';
 
+const iamRoutes = () => import('./iam/presentation/iam.routes').then(m => m.iamRoutes);
+
 export const routes: Routes = [
-  {path: '', component: MainComponent, canActivate:[authGuard]},
-  { path: 'sign-in', component: LogInComponent },
-  { path: 'sign-up', component: SignUpComponent },
+  {path: '', component: MainComponent, canActivate:[iamGuard]},
+  { path: 'auth', loadChildren: iamRoutes },
   { path: 'members/main', component: MainMemberComponent },
   { path: 'leaders/main', component: MainLeaderComponent },
   { path: 'leaders/my-group', component: MyGroupLeaderComponent },

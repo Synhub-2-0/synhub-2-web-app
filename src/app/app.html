@@ -1,15 +1,1 @@
-<main>
-  <div class="screen">
-    @if (showSideBar) {
-      <app-sidenav
-        [navData]="isLeader ? optionsLeader : optionsMember"
-        [role]="isLeader ? 'leader' : 'member'"
-        (onToggleSideNav)="onToggleSideNav($event)">
-      </app-sidenav>
-    }
-    <app-body
-      [collapsed]="isSideNavCollapsed"
-      [screenWidth]="screenWidth"
-    ></app-body>
-  </div>
-</main>
+<app-layout/>
