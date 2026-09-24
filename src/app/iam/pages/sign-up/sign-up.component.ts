@@ -43,8 +43,7 @@ export class SignUpComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      imgUrl: ['', [Validators.required, Validators.pattern('https?://.+')]],
-      role: ['', Validators.required]
+      imgUrl: ['', [Validators.required, Validators.pattern('https?://.+')]]
     }, { validators: this.passwordsMatchValidator });
   }
 
