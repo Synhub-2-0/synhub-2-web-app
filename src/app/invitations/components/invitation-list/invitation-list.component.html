@@ -1,15 +1,16 @@
 <div class="w-full">
   @if (invitations.length === 0) {
-    <p class="text-slate-500 italic text-lg py-4">No tienes invitaciones pendientes.</p>
-  }
-  
-  @if (invitations.length > 0) {
+    <div class="rounded-2xl bg-slate-50 border border-dashed border-slate-200 p-10 text-center flex flex-col items-center gap-2">
+      <mat-icon class="text-slate-400 scale-125">mark_email_read</mat-icon>
+      <p class="text-slate-500 font-medium text-sm mt-1">No tienes invitaciones pendientes en este grupo.</p>
+    </div>
+  } @else {
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       @for (invitation of invitations; track invitation.id) {
         <app-invitation
           [invitation]="invitation"
-          (invitationChanged)="reloadInvitations()"
-        ></app-invitation>
+          (invitationChanged)="onInvitationUpdated()">
+        </app-invitation>
       }
     </div>
   }

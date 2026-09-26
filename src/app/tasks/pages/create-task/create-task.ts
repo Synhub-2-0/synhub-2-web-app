@@ -59,7 +59,6 @@ export class CreateTaskComponent implements OnInit {
       },
       error: () => {
         this.loadingMembers = false;
-        alert('No se pudieron cargar los miembros del grupo.');
       }
     });
   }
@@ -88,7 +87,7 @@ export class CreateTaskComponent implements OnInit {
 
     this.api.createTaskForMember(this.memberId, {
       title: this.title.trim(),
-      description: this.description?.trim() || undefined,
+      description: this.description?.trim() || '',
       dueDate: iso
     }).subscribe({
       next: () => this.router.navigate(['/leaders/my-group/tasks']),

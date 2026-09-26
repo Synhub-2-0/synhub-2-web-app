@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksApiService, Task } from '../../services/tasks-api.service';
@@ -10,7 +10,7 @@ import { TasksApiService, Task } from '../../services/tasks-api.service';
   templateUrl: './view-task.html',
   styleUrls: ['./view-task.css']
 })
-export class ViewTaskComponent {
+export class ViewTaskComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private api = inject(TasksApiService);
@@ -18,7 +18,7 @@ export class ViewTaskComponent {
   task?: Task;
   loading = true;
 
-  ngOnInit() {
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) { this.back(); return; }
     this.api.getById(id).subscribe({

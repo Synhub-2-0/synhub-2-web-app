@@ -1,17 +1,23 @@
-import {Member} from '../../shared/model/member.entity';
-import {Group} from '../../groups/model/group.entity';
+import { GroupReduced, GroupUser } from '@app/groups/model/group.entity';
 
-export class Invitation{
+export interface CreateInvitationRequest {
+  userId: number;
+  groupId: number;
+}
+
+export class Invitation {
   id: number;
-  member: Member;
-  group: Group;
-  constructor(
-    id: number,
-    member: Member,
-    group: Group
-  ) {
+  group: GroupReduced;
+  user: GroupUser;
+
+  constructor(id: number, group: GroupReduced, user: GroupUser) {
     this.id = id;
-    this.member = member;
     this.group = group;
+    this.user = user;
+  }
+
+  /** Por si algún componente externo lee .member */
+  get member(): GroupUser {
+    return this.user;
   }
 }

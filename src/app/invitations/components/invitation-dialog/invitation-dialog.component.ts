@@ -1,38 +1,42 @@
-import {Component, Inject} from '@angular/core';
-import {DetailsService} from '@app/shared/services/details.service';
-import {Invitation} from '../../model/invitation.entity';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Router} from '@angular/router';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Invitation } from '../../model/invitation.entity';
+import { InvitationsApiService } from '../../services/invitations-api.service';
 
 @Component({
   selector: 'app-invitation-dialog',
+  standalone: true,
   imports: [],
   templateUrl: './invitation-dialog.component.html',
   styleUrl: './invitation-dialog.component.css'
 })
 export class InvitationDialogComponent {
   invitation: Invitation;
+  loading = false;
 
   constructor(
-    private detailsService: DetailsService,
-    @Inject(MAT_DIALOG_DATA) public data: { invitation: Invitation; },
-    private dialogRef: MatDialogRef<InvitationDialogComponent>,
-    private router: Router
+    private invitationsApi: InvitationsApiService,
+    @Inject(MAT_DIALOG_DATA) public data: { invitation: Invitation },
+    private dialogRef: MatDialogRef<InvitationDialogComponent>
   ) {
     this.invitation = data.invitation;
   }
 
-  onAcceptRequest() {
-    this.detailsService.acceptOrDeclineInvitation(this.invitation.id, true)
-      .subscribe({
-        next: () => {
-          this.dialogRef.close(true); // Cerramos el diálogo y enviamos 'true' como señal
-        },
-        error: err => { /* mostrar error */ }
-      });
+  onAcceptRequest(): void {
+    this.loading = true;
+    this.invitationsApi.acceptInvitation(this.invitation.id).subscribe({
+      next: () => {
+        this.loading = false;
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Error aceptando invitación:', err);
+      }
+    });
   }
 
-  onNoClick() {
-    this.dialogRef.close();
+  onNoClick(): void {
+    this.dialogRef.close(false);
   }
 }

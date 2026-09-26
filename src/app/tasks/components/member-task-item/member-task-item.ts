@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { Task, TaskStatus } from '../../model/task.model';
 import { TasksApiService } from '../../services/tasks-api.service';
 import {RequestApiService} from '@app/requests/services/request-api.service';
@@ -8,7 +9,7 @@ import {RequestApiService} from '@app/requests/services/request-api.service';
 @Component({
   selector: 'member-task-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './member-task-item.html',
   styleUrls: ['./member-task-item.css']
 })
@@ -33,7 +34,7 @@ export class MemberTaskItemComponent implements OnChanges {
       const d = Math.floor(diff / (24 * 60 * 60 * 1000));
       const h = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
       const m = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-      this.remainingLabel = `${d}d:${String(h).padStart(2, '0')}hrs:${String(m).padStart(2, '0')}min`;
+      this.remainingLabel = `${d}d ${String(h).padStart(2, '0')}h ${String(m).padStart(2, '0')}m`;
     } else {
       this.remainingLabel = '—';
     }

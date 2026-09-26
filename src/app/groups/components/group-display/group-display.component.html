@@ -1,65 +1,174 @@
-<div class="w-full h-full p-4 lg:p-0">
+<div class="w-full h-full p-4 lg:p-8 bg-[#f8fafc] min-h-screen">
   @if (loading) {
-    <div class="w-full h-full flex justify-center items-center">
-      <mat-icon aria-hidden="false" aria-label="Cargando" fontIcon="cached" class="animate-spin"></mat-icon>
+    <div class="w-full h-96 flex flex-col justify-center items-center gap-3">
+      <mat-icon aria-hidden="false" aria-label="Cargando" fontIcon="cached" class="animate-spin text-4xl text-[#4A90E2]"></mat-icon>
+      <span class="text-sm font-medium text-slate-500">Cargando tus grupos liderados...</span>
     </div>
   } @else {
-    @if (hasGroup) {
-      <div class="w-full h-auto lg:h-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 min-h-0">
-        <div class="w-full h-full flex flex-col gap-6 lg:gap-7">
-          <h2 class="text-xl lg:text-2xl font-bold">Grupo</h2>
+    @if (hasGroup && group) {
+      <div class="flex flex-col gap-6 max-w-7xl mx-auto">
 
-          <app-profile-image-display [groupName]="group.name" alt="Imagen del grupo" [imgSrc]="group.imgUrl"/>
+        <!-- Barra Superior: Selector de Grupos del Líder y Botón Crear -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-2 overflow-x-auto">
+            @for (grp of groups; track grp.id) {
+              <button
+                (click)="selectGroup(grp)"
+                [class]="grp.id === group.id
+                  ? 'bg-[#1A4E85] text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition cursor-pointer'
+                  : 'bg-white text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-xl text-sm border border-slate-200 transition cursor-pointer'">
+                {{ grp.name }}
+              </button>
+            }
+          </div>
 
-          <div class="text-white flex justify-center items-center">
-            <div class="bg-[#4A90E2] rounded-2xl py-2 px-6 text-lg lg:text-xl">
-              #{{ group.code }}
-            </div>
-          </div>
-          <div class="w-full flex-1">
-            <div class="w-full h-full rounded-3xl bg-[#1A4E85] p-6 lg:p-8 text-white text-center text-lg lg:text-xl flex items-center justify-center">
-              @if (group.description.length > 200) {
-                {{ group.description.slice(0, 200) + '...' }}
-              } @else {
-                {{ group.description }}
-              }
-            </div>
-          </div>
+          <button
+            (click)="goToCreateGroup()"
+            class="bg-[#4A90E2] hover:bg-[#357abd] text-white font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            <mat-icon class="scale-90">add</mat-icon>
+            Nuevo Grupo
+          </button>
         </div>
 
-        <div class="h-[400px] lg:h-full flex flex-col gap-6 lg:gap-7 min-h-0">
-          <h2 class="text-xl lg:text-2xl font-bold">Miembros</h2>
-          @if (hasMembers) {
-            <div class="flex-1 rounded-3xl bg-[#F4F4F4] p-4 lg:p-8 text-black text-center text-xl min-h-0 flex flex-col">
-              <div class="bg-white rounded-2xl h-full flex-1 min-h-0">
-                <div class="flex flex-col p-4 gap-4 h-full overflow-y-auto">
-                  @for (member of members; track member.id) {
-                    <div class="flex justify-between items-center gap-2">
-                      <div class="flex items-center min-w-0">
-                        <img [src]="member.imgUrl" [alt]="member.name"
-                             class="aspect-square rounded-full w-10 lg:w-12 object-cover shadow-md shadow-gray-800 mr-3 lg:mr-4" />
-                        <h3 class="text-sm lg:text-md font-medium text-left truncate">{{ member.name }}</h3>
-                      </div>
-                      <button
-                        (click)="openDialog(member.name, member.id)"
-                        class="bg-gray-300 flex items-center px-2 py-2 rounded hover:bg-red-400 transition-colors">
-                        <mat-icon aria-hidden="false" aria-label="delete" fontIcon="delete" />
-                      </button>
-                    </div>
-                  }
+        <!-- Cabecera del Grupo Seleccionado (Vista o Edición) -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 lg:p-8">
+          @if (!isEditing) {
+            <div class="flex flex-col md:flex-row items-center gap-6">
+              <img
+                [src]="group.imgUrl"
+                [alt]="group.name"
+                class="w-24 h-24 lg:w-32 lg:h-32 rounded-2xl object-cover shadow-sm border border-gray-100" />
+
+              <div class="flex-1 text-center md:text-left">
+                <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                  <h1 class="text-2xl lg:text-3xl font-extrabold text-slate-800">{{ group.name }}</h1>
+                  <span class="inline-block self-center md:self-auto bg-[#e0efff] text-[#1A4E85] font-bold px-4 py-1 rounded-xl text-sm border border-[#b8daff]">
+                    Código: #{{ group.code }}
+                  </span>
                 </div>
+                <p class="text-slate-500 mt-3 text-sm lg:text-base leading-relaxed">
+                  {{ group.description }}
+                </p>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <button
+                  (click)="startEdit()"
+                  class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5 transition cursor-pointer">
+                  <mat-icon class="scale-90">edit</mat-icon>
+                  Editar
+                </button>
+                <button
+                  (click)="confirmDeleteGroup()"
+                  class="bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5 transition cursor-pointer">
+                  <mat-icon class="scale-90">delete</mat-icon>
+                  Eliminar
+                </button>
               </div>
             </div>
           } @else {
-            <div class="flex-1 w-full h-full rounded-3xl bg-[#1A4E85] p-6 lg:p-8 text-white text-center text-lg lg:text-xl flex items-center justify-center">
-              Tu grupo no tiene integrantes, bríndale el código a tus compañeros de proyecto para poder unirse.
+            <!-- Formulario de Edición (PUT /api/v1/groups/{groupId}) -->
+            <div class="flex flex-col gap-4">
+              <h3 class="font-bold text-lg text-slate-800">Editar detalles del grupo</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre del grupo</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="editForm.name"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 outline-none focus:border-[#4A90E2]" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-1">URL de la imagen</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="editForm.imgUrl"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 outline-none focus:border-[#4A90E2]" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Descripción</label>
+                <textarea
+                  rows="3"
+                  [(ngModel)]="editForm.description"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-800 outline-none focus:border-[#4A90E2]"></textarea>
+              </div>
+              <div class="flex justify-end gap-3 mt-2">
+                <button
+                  (click)="cancelEdit()"
+                  class="px-5 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 cursor-pointer">
+                  Cancelar
+                </button>
+                <button
+                  (click)="saveGroupChanges()"
+                  class="px-5 py-2 rounded-xl bg-[#4A90E2] text-white font-bold hover:bg-[#357abd] cursor-pointer">
+                  Guardar Cambios
+                </button>
+              </div>
             </div>
           }
         </div>
+
+        <!-- Sección de Integrantes del Equipo -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 lg:p-8">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+            <div>
+              <h2 class="text-lg font-extrabold text-slate-800">
+                Integrantes del Equipo ({{ members.length }})
+              </h2>
+              <p class="text-xs text-slate-400">
+                Selecciona un integrante para revisar sus tareas asignadas o gestiona las invitaciones del grupo.
+              </p>
+            </div>
+
+            <button
+              (click)="goToInvitations()"
+              class="bg-[#1A4E85] hover:bg-[#143d69] text-white font-bold px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 self-start sm:self-auto transition cursor-pointer">
+              <mat-icon class="scale-90">person_add</mat-icon>
+              Gestionar Invitaciones
+            </button>
+          </div>
+
+          @if (hasMembers) {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              @for (item of members; track item.user.id) {
+                <div class="flex items-center justify-between p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:border-[#b8daff] transition-all">
+                  <div class="flex items-center gap-3.5 min-w-0">
+                    <img
+                      [src]="item.user.imgUrl"
+                      [alt]="item.user.name"
+                      class="w-12 h-12 rounded-full object-cover shadow-sm border border-slate-200" />
+                    <div class="min-w-0">
+                      <h3 class="text-sm font-bold text-slate-800 truncate">
+                        {{ item.user.name }} {{ item.user.surname }}
+                      </h3>
+                      <p class="text-xs text-slate-500 truncate">&#64;{{ item.user.username }}</p>
+                      <p class="text-[11px] text-slate-400 truncate">{{ item.user.email }}</p>
+                    </div>
+                  </div>
+
+                  <button
+                    (click)="goToMemberTasks(item.user.id)"
+                    title="Ver tareas del miembro"
+                    class="bg-white hover:bg-[#e0efff] text-[#1A4E85] border border-slate-200 p-2 rounded-xl transition cursor-pointer shrink-0">
+                    <mat-icon class="scale-90">assignment</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="rounded-2xl bg-slate-50 border border-dashed border-slate-300 p-8 text-center flex flex-col items-center gap-3">
+              <mat-icon class="text-slate-400 scale-125">group_add</mat-icon>
+              <p class="text-slate-600 font-medium text-sm max-w-md">
+                Tu grupo aún no tiene integrantes. Comparte el código <strong>#{{ group.code }}</strong> con tu equipo o envíales una invitación.
+              </p>
+            </div>
+          }
+        </div>
+
       </div>
     } @else {
-      <h2 class="text-xl lg:text-2xl font-bold mb-4">Grupo</h2>
-      <app-no-group-display/>
+      <app-no-group-display />
     }
   }
 </div>

@@ -16,11 +16,16 @@
       @for (task of filteredTasks; track task.id) {
         <div class="bg-white w-full rounded-2xl border border-gray-100 px-5 md:px-8 py-6 shadow-sm">
           <div class="flex flex-wrap sm:flex-nowrap items-center mb-4 gap-3">
-            <img ngSrc="{{task.member.urlImage}}"
+            <img *ngIf="task.member?.urlImage || task.user?.imgUrl"
+                 [src]="task.member?.urlImage || task.user?.imgUrl"
                  class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-200 object-cover" alt="avatar" fill/>
+            <span *ngIf="!task.member?.urlImage && !task.user?.imgUrl"
+                  class="grid w-12 h-12 md:w-14 md:h-14 place-items-center rounded-full bg-blue-600 font-bold text-white">
+              {{ (task.member?.name || task.user?.name || 'T')[0] }}
+            </span>
             <div class="flex-1 min-w-0">
               <div class="font-semibold text-base md:text-lg text-slate-900 mb-0.5 truncate">
-                {{ task.member.name }} {{ task.member.surname }}
+                {{ task.member?.name || task.user?.name }} {{ task.member?.surname || task.user?.surname }}
               </div>
               <div class="text-xl md:text-2xl font-bold text-gray-900 truncate">
                 {{ task.title }}

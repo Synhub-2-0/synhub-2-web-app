@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -12,11 +12,11 @@ import { LeaderTaskItemComponent } from '../../components/leader-task-item/leade
   templateUrl: './tasks-leader.component.html',
   styleUrl: './tasks-leader.component.css'
 })
-export class TasksLeaderComponent {
+export class TasksLeaderComponent implements OnInit {
   private api = inject(TasksApiService);
 
   private allTasks = signal<Task[]>([]);
-  totalCount = signal<number>(0);
+  totalCount = computed(() => this.allTasks().length);
 
   filter = signal<TaskStatus | 'ALL'>('ALL');
   TaskStatus = TaskStatus;
@@ -29,7 +29,6 @@ export class TasksLeaderComponent {
     TaskStatus.EXPIRED
   ];
 
-  // etiquetas en español (minúsculas)
   private statusLabels: Record<TaskStatus, string> = {
     [TaskStatus.IN_PROGRESS]: 'en progreso',
     [TaskStatus.DONE]: 'terminado',
@@ -38,7 +37,7 @@ export class TasksLeaderComponent {
     [TaskStatus.ON_HOLD]: 'en espera'
   };
   labelFor(s: TaskStatus | 'ALL'): string {
-    return s === 'ALL' ? 'todos' : this.statusLabels[s];
+    return s === 'ALL' ? 'Todos los estados' : this.statusLabels[s];
   }
 
   filtered = computed(() => {
@@ -47,13 +46,12 @@ export class TasksLeaderComponent {
     return f === 'ALL' ? all : all.filter(t => t.status === f);
   });
 
-  ngOnInit() { this.load(); }
+  ngOnInit(): void { this.load(); }
 
   load(): void {
     this.api.getAllStatuses().subscribe({
       next: data => {
         this.allTasks.set(data);
-        this.totalCount.set(data.length);
       }
     });
   }

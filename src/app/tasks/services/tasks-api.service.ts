@@ -2,39 +2,19 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, map, catchError, of } from 'rxjs';
 import { environment } from '@env/environment';
+import { Group } from '@app/groups/model/group.entity';
+import { Task, TaskMember, TaskStatus, UpdateTaskResource } from '../model/task.model';
+
+export { TaskStatus };
+export type { Task, TaskMember };
 
 export interface GroupMember {
   id: number;
+  username?: string;
   name: string;
   surname: string;
   urlImage: string;
-}
-
-export enum TaskStatus {
-  ON_HOLD = 'ON_HOLD',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
-  DONE = 'DONE',
-  EXPIRED = 'EXPIRED',
-}
-
-export interface TaskMember {
-  id: number;
-  name: string;
-  surname: string;
-  urlImage: string;
-}
-
-export interface Task {
-  id: number;
-  title: string;
-  description?: string;
-  dueDate?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  status: TaskStatus | string;
-  member?: TaskMember | null;
-  groupId?: number;
+  email?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -42,45 +22,74 @@ export class TasksApiService {
   private http = inject(HttpClient);
   private readonly BASE = `${environment.baseUrl}/tasks`;
 
-  getByStatus(status: TaskStatus): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.BASE}/status/${status}`);
+  getByStatus(status: TaskStatus | string): Observable<Task[]> {
+    return this.http.get<Task[]>(`${this.BASE}/status/${status}`).pipe(
+      catchError(() => of([]))
+    );
   }
 
-  getById(taskId: number) {
+  getById(taskId: number): Observable<Task> {
     return this.http.get<Task>(`${this.BASE}/${taskId}`);
   }
 
-  getAllStatuses() {
-    const statuses = [TaskStatus.ON_HOLD, TaskStatus.IN_PROGRESS, TaskStatus.DONE, TaskStatus.COMPLETED, TaskStatus.EXPIRED];
-    return forkJoin(
-      statuses.map(s =>
-        this.getByStatus(s).pipe(catchError(() => of([] as Task[])))
-      )
-    ).pipe(map(parts => parts.flat()));
+  getAllStatuses(): Observable<Task[]> {
+    const statuses = [
+      TaskStatus.ON_HOLD,
+      TaskStatus.IN_PROGRESS,
+      TaskStatus.DONE,
+      TaskStatus.COMPLETED,
+      TaskStatus.EXPIRED
+    ];
+    return forkJoin(statuses.map(status => this.getByStatus(status))).pipe(
+      map(parts => {
+        const unique = new Map<number, Task>();
+        parts.flat().forEach(task => unique.set(task.id, task));
+        return Array.from(unique.values());
+      })
+    );
   }
 
   getTasksByMember(memberId: number): Observable<Task[]> {
-    return this.http.get<Task[]>(`${environment.baseUrl}/members/${memberId}/tasks`);
+    return this.getAllStatuses().pipe(
+      map(tasks => tasks.filter(task => {
+        const assignedId = task.userId ?? task.member?.id ?? task.user?.id;
+        return assignedId ? assignedId === memberId : true;
+      }))
+    );
+  }
+
+  getTasksForAuthenticatedMember(): Observable<Task[]> {
+    return this.getAllStatuses();
   }
 
   createTaskForMember(
-    memberId: number,
-    payload: { title: string; description?: string; dueDate?: string }
-  ): Observable<void> {
-    const body = {
+    userId: number,
+    payload: { title: string; description?: string; dueDate: string }
+  ): Observable<Task> {
+    const body: UpdateTaskResource = {
       title: payload.title,
-      description: payload.description ?? undefined,
-      dueDate: payload.dueDate
+      description: payload.description ?? '',
+      dueDate: payload.dueDate,
+      userId
     };
-    return this.http.post<void>(`${environment.baseUrl}/members/${memberId}/tasks`, body);
+    return this.http.post<Task>(this.BASE, body);
   }
 
-  updateTask(taskId: number, payload: { title?: string; description?: string; dueDate?: string; memberId?: number | null }): Observable<void> {
-    return this.http.put<void>(`${this.BASE}/${taskId}`, payload);
+  updateTask(
+    taskId: number,
+    payload: { title: string; description?: string; dueDate: string; userId: number }
+  ): Observable<Task> {
+    const body: UpdateTaskResource = {
+      title: payload.title,
+      description: payload.description ?? '',
+      dueDate: payload.dueDate,
+      userId: payload.userId
+    };
+    return this.http.put<Task>(`${this.BASE}/${taskId}`, body);
   }
 
-  updateStatus(taskId: number, status: TaskStatus): Observable<void> {
-    return this.http.put<void>(`${this.BASE}/${taskId}/status/${status}`, {});
+  updateStatus(taskId: number, status: TaskStatus | string): Observable<Task> {
+    return this.http.put<Task>(`${this.BASE}/${taskId}/status/${status}`, {});
   }
 
   deleteTask(taskId: number): Observable<void> {
@@ -88,20 +97,19 @@ export class TasksApiService {
   }
 
   getGroupMembers(): Observable<GroupMember[]> {
-    const url = `${environment.baseUrl}/groups/members`;
-    return this.http.get<any[]>(url).pipe(
-      map(items =>
-        items.map(m => ({
-          id: m.id,
-          name: m.name,
-          surname: m.surname,
-          urlImage: m.imgUrl || ''
-        }) as GroupMember)
-      )
+    const url = `${environment.baseUrl}/groups/user/role?groupRole=GROUP_LEADER`;
+    return this.http.get<Group[]>(url).pipe(
+      map(groups => (groups?.[0]?.usersInGroup || [])
+        .filter(entry => entry.roleInGroup === 'GROUP_MEMBER')
+        .map(entry => ({
+          id: entry.user.id,
+          username: entry.user.username,
+          name: entry.user.name,
+          surname: entry.user.surname,
+          urlImage: entry.user.imgUrl || '',
+          email: entry.user.email
+        }))),
+      catchError(() => of([]))
     );
-  }
-
-  getTasksForAuthenticatedMember(): Observable<Task[]> {
-    return this.http.get<Task[]>(`${environment.baseUrl}/member/tasks`);
   }
 }

@@ -3,15 +3,15 @@
     <!-- header -->
     <header class="grid gap-2.5">
       <div class="flex items-center gap-3">
-        <img *ngIf="task.member?.urlImage; else initials"
-             class="h-12 w-12 rounded-full object-cover" [src]="task.member?.urlImage" alt="avatar">
+        <img *ngIf="task.member?.urlImage || task.user?.imgUrl; else initials"
+             class="h-12 w-12 rounded-full object-cover" [src]="task.member?.urlImage || task.user?.imgUrl" alt="avatar">
         <ng-template #initials>
           <span class="grid h-12 w-12 place-items-center rounded-full bg-blue-600 font-extrabold text-white">
-            {{ (task.member?.name||'')[0] }}{{ (task.member?.surname||'')[0] }}
+            {{ (task.member?.name || task.user?.name || 'T')[0] }}{{ (task.member?.surname || task.user?.surname || '')[0] }}
           </span>
         </ng-template>
         <div class="flex flex-col">
-          <div class="font-bold text-slate-900">{{ task.member?.name }} {{ task.member?.surname }}</div>
+          <div class="font-bold text-slate-900">{{ task.member?.name || task.user?.name }} {{ task.member?.surname || task.user?.surname }}</div>
         </div>
       </div>
       <div class="text-xl font-bold text-slate-800">{{ task.title }}</div>

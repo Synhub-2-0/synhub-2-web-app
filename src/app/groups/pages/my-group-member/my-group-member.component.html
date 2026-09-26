@@ -1,58 +1,149 @@
-<div class="w-full h-full p-4 lg:p-0">
+<div class="w-full h-full p-4 lg:p-8 bg-[#f8fafc] min-h-screen">
   @if (loading) {
-    <div class="w-full h-full flex justify-center items-center">
-      <mat-icon aria-hidden="false" aria-label="Cargando" fontIcon="cached" class="animate-spin"></mat-icon>
+    <div class="w-full h-96 flex flex-col justify-center items-center gap-3">
+      <mat-icon aria-hidden="false" aria-label="Cargando" fontIcon="cached" class="animate-spin text-4xl text-[#4A90E2]"></mat-icon>
+      <span class="text-sm font-medium text-slate-500">Cargando tu grupo de trabajo...</span>
     </div>
   } @else {
-    @if (hasGroup) {
-      <div class="w-full h-auto lg:h-full grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 min-h-0">
-        <div class="w-full h-full flex flex-col gap-6 lg:gap-7">
-          <h2 class="text-xl lg:text-2xl font-bold">Grupo</h2>
-          <app-profile-image-display [groupName]="group.name" alt="Imagen del grupo" [imgSrc]="group.imgUrl"/>
-          <div class="text-white flex justify-center items-center">
-            <div class="bg-[#4A90E2] rounded-2xl py-2 px-6 text-lg lg:text-xl">
-              #{{ group.code }}
-            </div>
+    @if (hasGroup && selectedGroup) {
+      <div class="flex flex-col gap-6 max-w-7xl mx-auto">
+
+        <!-- Selector de grupo si el miembro pertenece a más de uno -->
+        @if (memberGroups.length > 1) {
+          <div class="flex items-center gap-2 overflow-x-auto pb-2">
+            @for (grp of memberGroups; track grp.id) {
+              <button
+                (click)="selectGroup(grp)"
+                [class]="grp.id === selectedGroup.id
+                  ? 'bg-[#1A4E85] text-white font-bold px-4 py-2 rounded-xl text-sm shadow-sm transition'
+                  : 'bg-white text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-xl text-sm border border-slate-200 transition'">
+                {{ grp.name }}
+              </button>
+            }
           </div>
-          <div class="w-full flex-1">
-            <div class="w-full h-full rounded-3xl bg-[#1A4E85] p-6 lg:p-8 text-white text-center text-lg lg:text-xl flex items-center justify-center">
-              @if (group.description.length > 200) {
-                {{ group.description.slice(0, 200) + '...' }}
-              } @else {
-                {{ group.description }}
-              }
+        }
+
+        <!-- Cabecera del Grupo -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 flex flex-col md:flex-row items-center gap-6">
+          <img
+            [src]="selectedGroup.imgUrl"
+            [alt]="selectedGroup.name"
+            class="w-24 h-24 lg:w-28 lg:h-28 rounded-2xl object-cover shadow-sm border border-gray-100" />
+
+          <div class="flex-1 text-center md:text-left">
+            <h1 class="text-2xl lg:text-3xl font-extrabold text-slate-800">{{ selectedGroup.name }}</h1>
+            <p class="text-slate-500 mt-2 text-sm lg:text-base leading-relaxed">
+              {{ selectedGroup.description }}
+            </p>
+          </div>
+
+          <div class="bg-[#e0efff] text-[#1A4E85] font-bold px-6 py-3 rounded-2xl text-lg border border-[#b8daff] shrink-0">
+            #{{ selectedGroup.code }}
+          </div>
+        </div>
+
+        <!-- Líder y Accesos Rápidos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Tarjeta del Líder -->
+          <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 lg:p-8">
+            <h2 class="text-xs font-bold text-slate-400 tracking-widest mb-6 uppercase">Líder del Equipo</h2>
+            @if (leader) {
+              <div class="flex items-center gap-5">
+                <img
+                  [src]="leader.imgUrl"
+                  [alt]="leader.name"
+                  class="w-16 h-16 lg:w-20 lg:h-20 rounded-full object-cover border-2 border-gray-100 shadow-sm" />
+                <div class="min-w-0">
+                  <p class="font-bold text-lg lg:text-xl text-slate-800 truncate">
+                    {{ leader.name }} {{ leader.surname }}
+                  </p>
+                  <p class="text-sm text-slate-500 truncate">&#64;{{ leader.username }}</p>
+                  <div class="flex items-center gap-1 mt-1 text-xs text-slate-400 truncate">
+                    <mat-icon class="scale-75 origin-left">mail</mat-icon>
+                    <span class="truncate">{{ leader.email }}</span>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <p class="text-slate-400 text-sm">Información del líder no disponible.</p>
+            }
+          </div>
+
+          <!-- Resumen Rápido -->
+          <div class="bg-gradient-to-br from-[#1A4E85] to-[#4A90E2] rounded-3xl shadow-md p-6 lg:p-8 text-white flex flex-col justify-center relative overflow-hidden">
+            <mat-icon class="absolute -right-4 -bottom-4 text-[120px] opacity-10 rotate-12 select-none pointer-events-none">groups</mat-icon>
+            <h2 class="text-xs font-bold text-blue-200 tracking-widest mb-4 uppercase relative z-10">Accesos del Grupo</h2>
+            <div class="flex flex-col gap-3 relative z-10">
+              <div class="flex items-center gap-3 text-blue-50 bg-white/10 p-3 rounded-xl">
+                <mat-icon>people</mat-icon>
+                <span class="font-medium">{{ selectedGroup.usersInGroup?.length || 0 }} Integrantes en el equipo</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  (click)="goToMyTasks()"
+                  class="flex items-center justify-between bg-white text-[#1A4E85] p-3 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-sm cursor-pointer">
+                  <span class="flex items-center gap-2 text-sm">
+                    <mat-icon>task_alt</mat-icon> Mis Tareas
+                  </span>
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+                <button
+                  (click)="goToMyRequests()"
+                  class="flex items-center justify-between bg-white/15 text-white border border-white/30 p-3 rounded-xl font-bold hover:bg-white/25 transition-colors cursor-pointer">
+                  <span class="flex items-center gap-2 text-sm">
+                    <mat-icon>fact_check</mat-icon> Solicitudes
+                  </span>
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="h-[400px] lg:h-full flex flex-col gap-6 lg:gap-7 min-h-0">
-          <h2 class="text-xl lg:text-2xl font-bold">Miembros</h2>
-          @if (hasMembers) {
-            <div class="flex-1 rounded-3xl bg-[#F4F4F4] p-4 lg:p-8 text-black text-center text-xl min-h-0 flex flex-col">
-              <div class="bg-white rounded-2xl h-full flex-1 min-h-0">
-                <div class="flex flex-col p-4 gap-4 h-full overflow-y-auto">
-                  @for (member of members; track member.id) {
-                    <div class="flex justify-between items-center">
-                      <div class="flex items-center gap-3 min-w-0">
-                        <img [src]="member.imgUrl" [alt]="member.name"
-                             class="aspect-square rounded-full w-10 lg:w-12 object-cover shadow-md shadow-gray-800" />
-                        <h3 class="text-sm md:text-md font-medium text-left truncate">{{ member.name }}</h3>
-                      </div>
-                    </div>
-                  }
+        <!-- Compañeros de Equipo -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-6 lg:p-8">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+            <h2 class="text-xs font-bold text-slate-400 tracking-widest uppercase">
+              Compañeros de Equipo ({{ members.length }})
+            </h2>
+            <div class="flex bg-slate-100 rounded-full px-4 py-1.5 items-center gap-2">
+              <mat-icon class="text-slate-400 scale-75">search</mat-icon>
+              <input
+                type="text"
+                (input)="onFilterMembers($event)"
+                placeholder="Buscar por nombre o @usuario..."
+                class="bg-transparent border-none outline-none text-sm text-slate-700 w-full sm:w-52" />
+            </div>
+          </div>
+
+          @if (filteredMembers.length > 0) {
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              @for (item of filteredMembers; track item.user.id) {
+                <div class="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-[#e0efff]/40 hover:border-[#b8daff] transition-all">
+                  <img
+                    [src]="item.user.imgUrl"
+                    [alt]="item.user.name"
+                    class="w-12 h-12 rounded-full object-cover shadow-sm border border-slate-200" />
+                  <div class="min-w-0 flex-1">
+                    <p class="font-bold text-slate-800 truncate text-sm">
+                      {{ item.user.name }} {{ item.user.surname }}
+                    </p>
+                    <p class="text-xs text-slate-500 truncate">&#64;{{ item.user.username }}</p>
+                    <p class="text-[11px] text-slate-400 truncate mt-0.5">{{ item.user.email }}</p>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
           } @else {
-            <div class="flex-1 w-full h-full rounded-3xl bg-[#1A4E85] p-6 lg:p-8 text-white text-center text-lg lg:text-xl flex items-center justify-center">
-              Tu grupo no tiene integrantes.
+            <div class="p-8 text-center text-slate-400 text-sm">
+              No hay compañeros para mostrar.
             </div>
           }
         </div>
+
       </div>
     } @else {
-      <h2 class="text-xl lg:text-2xl font-bold mb-4">Grupo</h2>
-      <app-no-group-member-display/>
+      <app-no-group-member-display />
     }
   }
 </div>

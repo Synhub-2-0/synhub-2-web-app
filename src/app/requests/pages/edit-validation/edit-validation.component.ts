@@ -125,9 +125,9 @@ export class EditValidationComponent {
 
     const payload = {
       title: this.title.trim(),
-      description: this.description?.trim() || undefined,
-      memberId: this.memberId ?? undefined,
+      description: this.description?.trim() || '',
       dueDate: dueISO,
+      userId: this.memberId ?? 0,
     };
 
     this.tasksApiService.updateTask(this.taskId, payload).subscribe({

@@ -47,7 +47,7 @@ export class CreateGroupComponent {
 
     this.leaderGroupService.createGroup(new CreateGroupRequest(name, imgUrl, description)).subscribe({
       next: () => {
-        this.router.navigate(['leaders/group']).then();
+        this.router.navigate(['leaders/my-group']).then();
       },
       error: (err) => {
         console.error('Error creating group', err);

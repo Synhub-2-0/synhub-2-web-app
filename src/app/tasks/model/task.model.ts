@@ -8,9 +8,19 @@ export enum TaskStatus {
 
 export interface TaskMember {
   id: number;
+  username?: string;
   name: string;
   surname: string;
-  urlImage: string;
+  urlImage?: string;
+  imgUrl?: string;
+  email?: string;
+}
+
+export interface UpdateTaskResource {
+  title: string;
+  description: string;
+  dueDate: string;
+  userId: number;
 }
 
 export interface Task {
@@ -18,9 +28,11 @@ export interface Task {
   title: string;
   description?: string;
   status: TaskStatus | string;
-  dueDate?: string;       // ISO
+  dueDate?: string;
   createdAt?: string;
   updatedAt?: string;
+  userId?: number;
   member?: TaskMember | null;
+  user?: TaskMember | null;
   groupId?: number;
 }

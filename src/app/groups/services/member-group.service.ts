@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import {BaseApiService} from '@app/shared/services/base-api.service';
-import {Group} from '@app/groups/model/group.entity';
-import {catchError, Observable, retry} from 'rxjs';
-import {MemberGroup} from '@app/groups/model/member-group.entity';
+import { BaseApiService } from '@app/shared/services/base-api.service';
+import { Group } from '@app/groups/model/group.entity';
+import { catchError, Observable, retry } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +9,15 @@ import {MemberGroup} from '@app/groups/model/member-group.entity';
 export class MemberGroupService extends BaseApiService<Group> {
   constructor() {
     super();
-    this.resourceEndPoint = ''; // plural según API
+    this.resourceEndPoint = '/groups';
   }
 
-  getMemberGroup(): Observable<MemberGroup> {
-    return this.http.get<MemberGroup>(`${this.resourcePath()}/member/group`, this.httpOptions).pipe(
-      retry(2),
-      catchError(this.handleError)
-    );
-  }
-
-  getMemberTasks(memberId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.resourcePath()}/${memberId}/tasks`, this.httpOptions).pipe(
+  /** GET /api/v1/groups/user/role?groupRole=GROUP_MEMBER */
+  getMemberGroups(): Observable<Group[]> {
+    return this.http.get<Group[]>(
+      `${this.resourcePath()}/user/role?groupRole=GROUP_MEMBER`,
+      this.httpOptions
+    ).pipe(
       retry(2),
       catchError(this.handleError)
     );

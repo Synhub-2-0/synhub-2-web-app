@@ -1,15 +1,15 @@
 <article class="flex cursor-pointer flex-col gap-3 rounded-xl border border-slate-200 bg-white p-[18px] shadow-[0_6px_18px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_8px_22px_rgba(0,0,0,0.1)]" (click)="open()">
   <header class="flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <ng-container *ngIf="task.member?.urlImage; else initialsTpl">
-        <img class="h-[42px] w-[42px] rounded-full border-2 border-white object-cover shadow-sm" [src]="task.member?.urlImage" alt="avatar" />
+      <ng-container *ngIf="avatarUrl; else initialsTpl">
+        <img class="h-[42px] w-[42px] rounded-full border-2 border-white object-cover shadow-sm" [src]="avatarUrl" alt="avatar" />
       </ng-container>
       <ng-template #initialsTpl>
         <span class="grid h-[42px] w-[42px] place-items-center rounded-full bg-blue-600 font-bold text-white shadow-sm">{{ initials }}</span>
       </ng-template>
 
       <div class="flex flex-col">
-        <div class="font-bold text-slate-900">{{ task.member?.name }} {{ task.member?.surname }}</div>
+        <div class="font-bold text-slate-900">{{ assignedUser?.name }} {{ assignedUser?.surname }}</div>
         <div class="text-[1.05rem] font-bold text-slate-800">{{ task.title }}</div>
       </div>
     </div>

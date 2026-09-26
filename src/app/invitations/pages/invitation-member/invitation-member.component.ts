@@ -1,22 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
-import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import {InvitationsApiService} from '../../services/invitations-api.service';
-import {Invitation} from '../../model/invitation.entity';
-import {Router} from '@angular/router';
-import {Group} from '@app/groups/model/group.entity';
-import {DetailsService} from '@app/shared/services/details.service';
-import {GroupService} from '@app/groups/services/group.service';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { InvitationsApiService } from '../../services/invitations-api.service';
+import { Invitation } from '../../model/invitation.entity';
+import { Group } from '@app/groups/model/group.entity';
+import { GroupService } from '@app/groups/services/group.service';
+import { MemberGroupService } from '@app/groups/services/member-group.service';
 
 @Component({
   selector: 'app-invitation-member',
+  standalone: true,
   imports: [
-    MatFormField,
-    MatLabel,
+    CommonModule,
     MatIconModule,
-    MatInputModule,
     ReactiveFormsModule
   ],
   templateUrl: './invitation-member.component.html',
@@ -24,75 +22,86 @@ import {GroupService} from '@app/groups/services/group.service';
 })
 export class InvitationMemberComponent implements OnInit {
   searchForm: FormGroup;
+  loading = true;
+
+  groupFound: Group | null = null;
+  searchError: string | null = null;
+  activeInvitations: Invitation[] = [];
 
   constructor(
     private fb: FormBuilder,
     private invitationsApi: InvitationsApiService,
     private groupsApi: GroupService,
-    private detailsService: DetailsService,
+    private memberGroupService: MemberGroupService,
     private router: Router
-    ) {
+  ) {
     this.searchForm = this.fb.group({
       query: ['']
     });
   }
-  groupFound: Group | null = null;
-  searchError: string | null = null;
-  activeInvitation: Invitation | null = null;
 
   ngOnInit(): void {
-    this.checkActiveInvitation()
-    console.clear()
+    this.checkActiveInvitations();
   }
 
-  checkActiveInvitation(): void {
-    this.invitationsApi.getInvitationsByMember().subscribe({
-      next: (invitation) => {
-        console.log('Invitacion activa', invitation);
-        this.activeInvitation = invitation || null;
+  checkActiveInvitations(): void {
+    this.loading = true;
+    this.invitationsApi.getInvitationsByUser().subscribe({
+      next: (invitations) => {
+        this.activeInvitations = invitations || [];
+        this.loading = false;
       },
-      error: (err) => {
-        this.activeInvitation = null;
+      error: () => {
+        this.activeInvitations = [];
+        this.loading = false;
       }
     });
-    console.clear();
   }
 
   onSearch(): void {
-    const code = this.searchForm.value.query;
-    this.groupsApi.searchGroupByCode(code).subscribe({
+    const rawCode = (this.searchForm.value.query || '').replace('#', '').trim();
+    if (!rawCode) return;
+
+    this.groupsApi.searchGroupByCode(rawCode).subscribe({
       next: (group) => {
         this.groupFound = group;
         this.searchError = null;
-        console.log('Grupo encontrado:', group);
-        // Aquí puedes manejar la respuesta, mostrar datos, etc.
       },
-      error: (err) => {
+      error: () => {
         this.groupFound = null;
         this.searchError = 'No se encontró ningún grupo con ese código.';
-        console.error('Error al buscar grupo:', err);
-        // Aquí puedes mostrar un mensaje de error al usuario
       }
     });
   }
 
-  onJoinGroup(): void{
-    this.invitationsApi.sendInvitation(this.groupFound?.id).subscribe({
+  onJoinGroup(): void {
+    if (!this.groupFound) return;
+    this.invitationsApi.sendInvitationToGroup(this.groupFound.id).subscribe({
       next: () => {
-        this.checkActiveInvitation()// Actualiza la invitación activa
-        console.clear();
+        this.groupFound = null;
+        this.checkActiveInvitations();
       },
       error: (err) => {
-        console.error('Error al enviar invitación:', err);
+        console.error('Error al enviar solicitud de ingreso:', err);
       }
     });
   }
 
-  onCancelInvitation() {
-    this.invitationsApi.cancelInvitation().subscribe({
+  onAcceptInvitation(invitationId: number): void {
+    this.invitationsApi.acceptInvitation(invitationId).subscribe({
       next: () => {
-        this.activeInvitation =  null
-        console.clear();
+        this.router.navigate(['/members/my-group']).then();
+      },
+      error: (err) => {
+        console.error('Error al aceptar invitación:', err);
+      }
+    });
+  }
+
+  onCancelInvitation(invitationId: number): void {
+    this.invitationsApi.cancelInvitation(invitationId).subscribe({
+      next: () => {
+        this.activeInvitations = this.activeInvitations.filter(i => i.id !== invitationId);
       },
       error: (err) => {
         console.error('Error al cancelar invitación:', err);
@@ -100,15 +109,17 @@ export class InvitationMemberComponent implements OnInit {
     });
   }
 
-
-  onCheckInvitation() {
-    this.detailsService.getMemberGroup().subscribe({
-      next: () => {
-        this.router.navigate(['/members/main']);
+  onCheckInvitationStatus(): void {
+    this.memberGroupService.getMemberGroups().subscribe({
+      next: (groups) => {
+        if (groups && groups.length > 0) {
+          this.router.navigate(['/members/my-group']).then();
+        } else {
+          this.checkActiveInvitations();
+        }
       },
-      error: (err) => {
-        this.checkActiveInvitation();
-        console.error('Error al consultar el grupo:', err);
+      error: () => {
+        this.checkActiveInvitations();
       }
     });
   }

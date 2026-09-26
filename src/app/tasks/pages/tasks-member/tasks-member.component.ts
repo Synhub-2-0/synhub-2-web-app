@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TasksApiService, Task, TaskStatus } from '../../services/tasks-api.service';
@@ -11,7 +11,7 @@ import { MemberTaskItemComponent } from '../../components/member-task-item/membe
   templateUrl: './tasks-member.component.html',
   styleUrls: ['./tasks-member.component.css']
 })
-export class TasksMemberComponent {
+export class TasksMemberComponent implements OnInit {
   private api = inject(TasksApiService);
 
   private allTasks = signal<Task[]>([]);
@@ -36,7 +36,7 @@ export class TasksMemberComponent {
     [TaskStatus.ON_HOLD]: 'en espera'
   };
   labelFor(s: TaskStatus | 'ALL'): string {
-    return s === 'ALL' ? 'todos' : this.statusLabels[s];
+    return s === 'ALL' ? 'Todas' : this.statusLabels[s];
   }
 
   filtered = computed(() => {
@@ -45,7 +45,7 @@ export class TasksMemberComponent {
     return f === 'ALL' ? all : all.filter(t => t.status === f);
   });
 
-  ngOnInit() { this.load(); }
+  ngOnInit(): void { this.load(); }
 
   load(): void {
     this.api.getTasksForAuthenticatedMember().subscribe({

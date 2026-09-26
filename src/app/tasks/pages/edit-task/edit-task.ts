@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './edit-task.html',
   styleUrls: ['./edit-task.css']
 })
-export class EditTaskComponent {
+export class EditTaskComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private api = inject(TasksApiService);
@@ -45,10 +45,9 @@ export class EditTaskComponent {
        </svg>`
       );
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.taskId = Number(this.route.snapshot.paramMap.get('id'));
     if (!this.taskId) {
-      alert('ID de tarea inválido');
       this.router.navigate(['/leaders/my-group/tasks']);
       return;
     }
@@ -57,7 +56,7 @@ export class EditTaskComponent {
       next: (t: Task) => {
         this.title = t.title ?? '';
         this.description = t.description ?? '';
-        this.memberId = t.member?.id ?? (t as any).memberId;
+        this.memberId = t.userId ?? t.member?.id ?? t.user?.id;
 
         if (t.dueDate) {
           const d = new Date(t.dueDate);
@@ -75,7 +74,6 @@ export class EditTaskComponent {
         this.loading = false;
       },
       error: () => {
-        alert('No se pudo cargar la tarea.');
         this.router.navigate(['/leaders/my-group/tasks']);
       }
     });
@@ -87,7 +85,6 @@ export class EditTaskComponent {
       },
       error: () => {
         this.loadingMembers = false;
-        alert('No se pudieron cargar los miembros del grupo.');
       }
     });
   }
@@ -103,11 +100,9 @@ export class EditTaskComponent {
 
   save() {
     if (!this.title.trim()) {
-      alert('El título es obligatorio');
       return;
     }
     if (!this.dueDateTime) {
-      alert('La fecha y hora de vencimiento son obligatorias.');
       return;
     }
 
@@ -117,9 +112,9 @@ export class EditTaskComponent {
 
     const payload = {
       title: this.title.trim(),
-      description: this.description?.trim() || undefined,
-      memberId: this.memberId ?? undefined,
+      description: this.description?.trim() || '',
       dueDate: dueISO,
+      userId: this.memberId ?? 0
     };
 
     this.api.updateTask(this.taskId, payload).subscribe({
